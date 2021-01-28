@@ -26,11 +26,18 @@ export class AppComponent extends AbstractComponent {
                     })
                 )
                 .subscribe(e => {
-                    const units = e.unit_list.map(unit => Object.assign(new Unit(), unit));
-                    const unitRunes = units.map(unit => unit.runes.map(rune => Object.assign(new Rune(), rune, { unit: unit })));
+                    const units = e.unit_list.map(unit => Object.assign(
+                        new Unit(),
+                        unit,
+                        {
+                            runes: unit.runes.map(rune => Object.assign(new Rune(), rune))
+                        }
+                    ));
+                    const unitRunes = units.map(unit => unit.runes.map(rune => Object.assign(rune, { unit: unit })));
                     const runes = e.runes.map(rune => Object.assign(new Rune(), rune));
                     this.subjectManager.runes.next([].concat(...unitRunes).concat(runes));
                     this.subjectManager.units.next(units.filter(unit => unit.class >= 5 || unit.runes.length > 0));
+                    console.log(units);
                 }),
         );
     }

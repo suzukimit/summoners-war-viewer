@@ -19,9 +19,10 @@ import { RuneService } from 'src/app/rune/rune.service';
 import { RunesComponent } from 'src/app/rune/components/runes/runes.component';
 import { SubjectManager } from 'src/app/common/subject.manager';
 import { AbstractComponent } from 'src/app/common/components/base/abstract.component';
-import { UnitDialogComponent, UnitsComponent } from 'src/app/unit/components/units/units.component';
+import { UnitsComponent } from 'src/app/unit/components/units/units.component';
 import { TableComponent } from './common/components/table/table.component';
 import { FormsModule } from '@angular/forms';
+import { UnitDialogComponent } from 'src/app/unit/components/unit-dialog/unit-dialog.component';
 
 @NgModule({
     declarations: [

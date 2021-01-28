@@ -66,6 +66,28 @@ export class Rune {
 
     get extraView() { return extra[this.extra]; }
 
+    get hp() { return this.calcStatus(1) }
+    get hpPercent() { return this.calcStatus(2) }
+    get atk() { return this.calcStatus(3) }
+    get atkPercent() { return this.calcStatus(4) }
+    get def() { return this.calcStatus(5) }
+    get defPercent() { return this.calcStatus(6) }
+    get speed() { return this.calcStatus(8) }
+    get cliRate() { return this.calcStatus(9) }
+    get cliDamage() { return this.calcStatus(10) }
+    get resist() { return this.calcStatus(11) }
+    get accuracy() { return this.calcStatus(12) }
+    calcStatus(type: number) {
+        let value = 0;
+        if (this.mainType === type) { value += this.mainValue; }
+        if (this.prefixType === type) { value += this.prefixValue; }
+        if (this.sub1Type === type) { value += this.sub1Value; }
+        if (this.sub2Type === type) { value += this.sub2Value; }
+        if (this.sub3Type === type) { value += this.sub3Value; }
+        if (this.sub4Type === type) { value += this.sub4Value; }
+        return value;
+    }
+
     subValue(i, j) {
         if (this.sec_eff[i]) {
             return this.sec_eff[i][j];

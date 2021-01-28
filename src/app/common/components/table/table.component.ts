@@ -16,6 +16,7 @@ export class TableComponent<T=any> extends AbstractComponent implements OnInit {
         super();
     }
 
+    @Input() data: T[] = [];
     @Input() dataSourceSubject: BehaviorSubject<T[]> = null;
     dataSource: MatTableDataSource<T> = null;
     filterValues = {};
@@ -28,20 +29,29 @@ export class TableComponent<T=any> extends AbstractComponent implements OnInit {
         options: any[],
         customFunction: (data: T, value) => boolean,
     }[] = [];
+    @Input() pageable: boolean = false;
     @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
     @ViewChild(MatSort, {static: true}) sort: MatSort;
     @Output() clickRowEvent = new EventEmitter<T>();
 
     ngOnInit(): void {
         this.displayedColumns = this.columnFields.map(f => f.key);
-        this.subscriptions.push(
-            this.dataSourceSubject.pipe(filter(data => data !== null)).subscribe((data: T[]) => {
-                this.dataSource = new MatTableDataSource(data);
-                this.dataSource.filterPredicate = this.createFilter();
-                this.dataSource.paginator = this.paginator;
-                this.dataSource.sort = this.sort;
-            }),
-        );
+        if (this.dataSourceSubject) {
+            this.subscriptions.push(
+                this.dataSourceSubject.pipe(filter(data => data !== null)).subscribe((data: T[]) => {
+                    this.initDataSource(data);
+                }),
+            );
+        } else {
+            this.initDataSource(this.data);
+        }
+    }
+
+    initDataSource(data: T[]) {
+        this.dataSource = new MatTableDataSource(data);
+        this.dataSource.filterPredicate = this.createFilter();
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
     }
 
     createFilter() {

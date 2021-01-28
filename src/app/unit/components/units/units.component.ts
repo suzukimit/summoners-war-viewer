@@ -3,6 +3,7 @@ import { AbstractComponent } from 'src/app/common/components/base/abstract.compo
 import { SubjectManager } from 'src/app/common/subject.manager';
 import { Unit } from 'src/app/unit/unit';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material';
+import { UnitDialogComponent } from 'src/app/unit/components/unit-dialog/unit-dialog.component';
 
 @Component({
     selector: 'app-units',
@@ -37,15 +38,12 @@ export class UnitsComponent extends AbstractComponent {
             key: 'unit_level',
         },
     ];
-    filterFields = [
-    ];
 
     clickRow(unit: Unit) {
         const dialogRef = this.dialog.open(UnitDialogComponent, {
-            width: '250px',
+            width: '1000px',
             data: unit
         });
-
         dialogRef.afterClosed().subscribe(result => {
             console.log('The dialog was closed');
         });
@@ -55,31 +53,3 @@ export class UnitsComponent extends AbstractComponent {
     }
 }
 
-@Component({
-    selector: 'dialog-overview-example-dialog',
-    template: `
-        <h1 mat-dialog-title>Hi {{data.name}}</h1>
-        <div mat-dialog-content>
-            <p>What's your favorite animal?</p>
-            <mat-form-field>
-                <mat-label>Favorite Animal</mat-label>
-                <input matInput [(ngModel)]="data.name">
-            </mat-form-field>
-        </div>
-        <div mat-dialog-actions>
-            <button mat-button (click)="onNoClick()">No Thanks</button>
-            <button mat-button [mat-dialog-close]="data" cdkFocusInitial>Ok</button>
-        </div>
-    `
-})
-export class UnitDialogComponent {
-
-    constructor(
-        public dialogRef: MatDialogRef<UnitDialogComponent>,
-        @Inject(MAT_DIALOG_DATA) public data: Unit) {}
-
-    onNoClick(): void {
-        this.dialogRef.close();
-    }
-
-}

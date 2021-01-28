@@ -34,13 +34,35 @@ export class Unit {
     source = "";    //?
 
     atk = 0;
-    con = 0;    //?
+    con = 0;
+    get hp(): number {
+        return this.con * 15;
+    }
     def = 0;
     spd = 0;
     critical_rate = 0;
     critical_damage = 0;
+    resist = 0;
     accuracy = 0;
-    regist = 0;
+
+    get hpView(): string { return this.statusView('hp', 'hp', 'hpPercent'); }
+    get atkView(): string { return this.statusView('atk', 'atk', 'atkPercent'); }
+    get defView(): string { return this.statusView('def', 'def', 'defPercent'); }
+    get spdView(): string { return this.statusView('spd', 'speed', ''); }
+    get cliRateView(): string { return this.statusView('critical_rate', 'cliRate', ''); }
+    get cliDamageView(): string { return this.statusView('critical_damage', 'cliDamage', ''); }
+    get resistView(): string { return this.statusView('resist', 'resist', ''); }
+    get accuracyView(): string { return this.statusView('accuracy', 'accuracy', ''); }
+
+    //TODO アーティファクトとルーンセット効果
+    statusView(key: string, runeFlatKey: string, runePercentKey: string): string {
+        const flatValue = this.runes.map(r => r[runeFlatKey]).reduce((accumulator, currentValue) => accumulator + currentValue);
+        const percentValue = runePercentKey ? this.runes.map(r => r[runePercentKey]).reduce((accumulator, currentValue) => accumulator + currentValue) : 0;
+        const runeValue = flatValue + Math.ceil(percentValue * this[key] / 100);
+        return `${this[key]} + ${runeValue}`;
+    }
+
+    regist = 0; //?
 
     get attributeName(): string {
         return attribute[this.attribute];

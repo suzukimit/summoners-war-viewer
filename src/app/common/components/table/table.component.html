@@ -16,7 +16,7 @@
             </ng-container>
         </ng-container>
     </ng-container>
-    <button mat-flat-button color="accent" (click)="resetFilters()">クリア</button>
+    <button mat-flat-button color="accent" (click)="resetFilters()" *ngIf="filterFields.length > 0">クリア</button>
 </div>
 
 <table mat-table matSort [dataSource]="dataSource" class="mat-elevation-z8">
@@ -35,4 +35,6 @@
     <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="onClickRow(row)"></tr>
 </table>
 
-<mat-paginator [pageSizeOptions]="[10, 20, 50, 100]" showFirstLastButtons></mat-paginator>
+<div [hidden]=!pageable>
+    <mat-paginator [pageSizeOptions]="[10, 20, 50, 100]" showFirstLastButtons></mat-paginator>
+</div>
