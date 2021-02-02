@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
-import { extra, Rune, runeEffectType, runeSet } from 'src/app/rune/rune';
+import { extra, Rune, runeColumnFields, runeEffectType, runeSet, ScoreRate } from 'src/app/rune/rune';
 import { SubjectManager } from 'src/app/common/subject.manager';
 import { AbstractComponent } from 'src/app/common/components/base/abstract.component';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { filter } from 'rxjs/operators';
 
 @Component({
     selector: 'app-runes',
@@ -13,83 +15,28 @@ export class RunesComponent extends AbstractComponent {
     constructor(protected subjectManager: SubjectManager) {
         super();
     }
-
-    columnFields = [
-        {
-            label: 'セット',
-            key: 'setView',
-        },
-        {
-            label: 'スロット',
-            key: 'slot_no',
-        },
-        {
-            label: 'メイン',
-            key: 'mainView',
-        },
-        {
-            label: '接頭',
-            key: 'prefixView',
-        },
-        {
-            label: 'サブ1（タイプ）',
-            key: 'sub1TypeView',
-        },
-        {
-            label: 'サブ1（数値）',
-            key: 'sub1Value',
-            sortable: true,
-        },
-        {
-            label: 'サブ2（タイプ）',
-            key: 'sub2TypeView',
-        },
-        {
-            label: 'サブ2（数値）',
-            key: 'sub2Value',
-            sortable: true,
-        },
-        {
-            label: 'サブ3（タイプ）',
-            key: 'sub3TypeView',
-        },
-        {
-            label: 'サブ3（数値）',
-            key: 'sub3Value',
-            sortable: true,
-        },
-        {
-            label: 'サブ4（タイプ）',
-            key: 'sub4TypeView',
-        },
-        {
-            label: 'サブ4（数値）',
-            key: 'sub4Value',
-            sortable: true,
-        },
-        {
-            label: '強化段階',
-            key: 'upgrade_curr',
-        },
-        {
-            label: '純正ランク',
-            key: 'extraView',
-        },
+    runes: Rune[] = [];
+    scoreRate: ScoreRate = new ScoreRate();
+    columnFields = runeColumnFields.concat([
         {
             label: 'スコア',
             key: 'score',
             sortable: true,
+            valueAccessor: (rune: Rune) => { return rune.calcScore(this.scoreRate) },
         },
         {
             label: 'スコア+',
             key: 'potentialScore',
             sortable: true,
+            valueAccessor: (rune: Rune) => { return rune.calcPotentialScore(this.scoreRate) },
         },
         {
             label: 'ユニット',
             key: 'unitName',
+            sortable: false,
+            valueAccessor: null,
         }
-    ];
+    ]);
     filterFields = [
         {
             label: 'セット',
@@ -165,5 +112,15 @@ export class RunesComponent extends AbstractComponent {
         },
     ];
 
-    ngOnInit(): void {}
+    ngOnInit(): void {
+        this.subscriptions.push(
+            this.subjectManager.runes.pipe(filter(runes => runes !== null)).subscribe(runes => {
+                this.runes = runes;
+            }),
+            this.subjectManager.runesScoreRate.pipe(filter(rate => rate !== null)).subscribe(rate => {
+                this.scoreRate = rate;
+            }),
+        );
+    }
 }
+

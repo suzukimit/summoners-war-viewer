@@ -2,6 +2,7 @@
  * pri_effとかは[effectType, 数値]となっている。
  */
 import { Unit } from 'src/app/unit/unit';
+import { Validators } from '@angular/forms';
 
 export class Rune {
     set_id: number;
@@ -121,30 +122,30 @@ export class Rune {
         }
     }
 
-    get score() {
-        let score = 0;
-        score += this.calc(this.prefixType, this.prefixValue);
-        score += this.calc(this.sub1Type, this.sub1Value);
-        score += this.calc(this.sub2Type, this.sub2Value);
-        score += this.calc(this.sub3Type, this.sub3Value);
-        score += this.calc(this.sub4Type, this.sub4Value);
-        return score;
+    calcScore(rate: ScoreRate) {
+        let result = 0;
+        result += this.calc(this.prefixType, this.prefixValue, rate);
+        result += this.calc(this.sub1Type, this.sub1Value, rate);
+        result += this.calc(this.sub2Type, this.sub2Value, rate);
+        result += this.calc(this.sub3Type, this.sub3Value, rate);
+        result += this.calc(this.sub4Type, this.sub4Value, rate);
+        return result;
     }
 
-    get potentialScore() {
-        return this.calcPotentialScore({});
+    calcPotentialScore(rate: ScoreRate) {
+        return this._calcPotentialScore(rate, {});
     }
 
-    get potentialScore2() {
-        return this.calcPotentialScore({ isUseEnhance: true });
+    calcPotentialScore2(rate: ScoreRate) {
+        return this._calcPotentialScore(rate, { isUseEnhance: true });
     }
 
-    get potentialScore3() {
-        return this.calcPotentialScore({ isUseEnhance: true, isUseGem: true });
+    calcPotentialScore3(rate: ScoreRate) {
+        return this._calcPotentialScore(rate, { isUseEnhance: true, isUseGem: true });
     }
 
-    calcPotentialScore({ isUseEnhance = false, isUseGem = false }) {
-        let score = this.score;
+    private _calcPotentialScore(rate: ScoreRate, { isUseEnhance = false, isUseGem = false }) {
+        let result = this.calcScore(rate);
         // 強化段階が12未満
         let enhanceableCount = this.upgrade_curr >= 12 ? 0 : (4 - this.upgrade_curr / 3);
         let emptySubOptionCount = (this.sub1Type === 0 ? 1 : 0) + (this.sub2Type === 0 ? 1 : 0)
@@ -152,28 +153,24 @@ export class Rune {
         let potentialOptions = [];
         while (enhanceableCount > 0) {
             if (emptySubOptionCount >= enhanceableCount) {
-                score += this.maxValue({ isNewOption: true, potentialOptions: potentialOptions });
+                result += this.maxValue({ isNewOption: true, potentialOptions: potentialOptions });
                 emptySubOptionCount--;
             } else {
-                score += this.maxValue({});
+                result += this.maxValue({});
             }
             enhanceableCount--;
         }
         // ジェム・練磨
         if (isUseGem) {
         }
-        return score;
+        return result;
     }
 
-    calc(type, value) {
-        if (type) {
-            return value * runeEffectType[type].scoreRate;
-        } else {
-            return 0;
-        }
+    private calc(type, value, rate: ScoreRate) {
+        return value * rate.fromRuneEffectType(type);
     }
 
-    maxValue({ isNewOption = false, potentialOptions = [] }): number {
+    private maxValue({ isNewOption = false, potentialOptions = [] }): number {
         let types = Object.entries(runeEffectType);
         // スロットによって取得できないタイプは除外
         if (this.slot_no === 1) {
@@ -207,28 +204,82 @@ export class Rune {
     }
 }
 
+export class ScoreRate {
+    hp: number = 1;
+    hpFlat: number = 0.01;
+    atk: number = 1;
+    atkFlat: number = 0.2;
+    def: number = 1;
+    defFlat: number = 0.2;
+    spd: number = 2;
+    cliRate: number = 1.5;
+    cliDmg: number = 1.2;
+    resist: number = 1;
+    accuracy: number = 1;
+    fromRuneEffectType(key: number) {
+        switch (key) {
+            case 1: return this.hpFlat;
+            case 2: return this.hp;
+            case 3: return this.atkFlat;
+            case 4: return this.atk;
+            case 5: return this.defFlat;
+            case 6: return this.def;
+            case 8: return this.spd;
+            case 9: return this.cliRate;
+            case 10: return this.cliDmg;
+            case 11: return this.resist;
+            case 12: return this.accuracy;
+            default: return 0;
+        }
+    }
+}
+
 export const runeSet = {
-    1: 'Energy-元気',
-    2: 'Guard-守護',
-    3: 'Swift-迅速',
-    4: 'Blade-刃',
-    5: 'Rage-激怒',
-    6: 'Focus-集中',
-    7: 'Endure-忍耐',
-    8: 'Fatal-猛攻',
-    10: 'Despair-絶望',
-    11: 'Vampire-吸血',
-    13: 'Violent-暴走',
-    14: 'Nemesis-果報',
-    15: 'Will-意志',
-    16: 'Shield-保護',
-    17: 'Revenge-反撃',
-    18: 'Destroy-破壊',
-    19: 'Fight-闘志',
-    20: 'Determination-決意',
-    21: 'Enhance-高揚',
-    22: 'Accuracy-命中',
-    23: 'Tolerance-根性'
+    1: '元気',
+    2: '守護',
+    3: '迅速',
+    4: '刃',
+    5: '激怒',
+    6: '集中',
+    7: '忍耐',
+    8: '猛攻',
+    10: '絶望',
+    11: '吸血',
+    13: '暴走',
+    14: '果報',
+    15: '意志',
+    16: '保護',
+    17: '反撃',
+    18: '破壊',
+    19: '闘志',
+    20: '決意',
+    21: '高揚',
+    22: '命中',
+    23: '根性'
+};
+
+export const runeSetEn = {
+    1: 'Energy',
+    2: 'Guard',
+    3: 'Swift',
+    4: 'Blade',
+    5: 'Rage',
+    6: 'Focus',
+    7: 'Endure',
+    8: 'Fatal',
+    10: 'Despair',
+    11: 'Vampire',
+    13: 'Violent',
+    14: 'Nemesis',
+    15: 'Will',
+    16: 'Shield',
+    17: 'Revenge',
+    18: 'Destroy',
+    19: 'Fight',
+    20: 'Determination',
+    21: 'Enhance',
+    22: 'Accuracy',
+    23: 'Tolerance'
 };
 
 export const runeEffectType = {
@@ -378,3 +429,90 @@ export const extra = {
     14: '古代ヒーロー',
     15: '古代レジェンド',
 };
+
+export const runeColumnFields = [
+    {
+        label: 'セット',
+        key: 'setView',
+        sortable: false,
+        valueAccessor: null,
+    },
+    {
+        label: 'スロット',
+        key: 'slot_no',
+        sortable: false,
+        valueAccessor: null,
+    },
+    {
+        label: 'メイン',
+        key: 'mainView',
+        sortable: false,
+        valueAccessor: null,
+    },
+    {
+        label: '接頭',
+        key: 'prefixView',
+        sortable: false,
+        valueAccessor: null,
+    },
+    {
+        label: 'サブ1（タイプ）',
+        key: 'sub1TypeView',
+        sortable: false,
+        valueAccessor: null,
+    },
+    {
+        label: 'サブ1（数値）',
+        key: 'sub1Value',
+        sortable: true,
+        valueAccessor: null,
+    },
+    {
+        label: 'サブ2（タイプ）',
+        key: 'sub2TypeView',
+        sortable: false,
+        valueAccessor: null,
+    },
+    {
+        label: 'サブ2（数値）',
+        key: 'sub2Value',
+        sortable: true,
+        valueAccessor: null,
+    },
+    {
+        label: 'サブ3（タイプ）',
+        key: 'sub3TypeView',
+        sortable: false,
+        valueAccessor: null,
+    },
+    {
+        label: 'サブ3（数値）',
+        key: 'sub3Value',
+        sortable: true,
+        valueAccessor: null,
+    },
+    {
+        label: 'サブ4（タイプ）',
+        key: 'sub4TypeView',
+        sortable: false,
+        valueAccessor: null,
+    },
+    {
+        label: 'サブ4（数値）',
+        key: 'sub4Value',
+        sortable: true,
+        valueAccessor: null,
+    },
+    {
+        label: '強化段階',
+        key: 'upgrade_curr',
+        sortable: false,
+        valueAccessor: null,
+    },
+    {
+        label: '純正ランク',
+        key: 'extraView',
+        sortable: false,
+        valueAccessor: null,
+    },
+];

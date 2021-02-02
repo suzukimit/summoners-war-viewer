@@ -1,6 +1,8 @@
+<h2>ルーン一覧</h2>
 <app-table
     [dataSourceSubject]=subjectManager.runes
     [columnFields]=columnFields
     [filterFields]=filterFields
     [pageable]=true
 ></app-table>
+<app-score-rate-form [subject]=subjectManager.runesScoreRate></app-score-rate-form>

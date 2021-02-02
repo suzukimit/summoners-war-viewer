@@ -4,6 +4,7 @@ import { MatPaginator, MatSort } from '@angular/material';
 import { AbstractComponent } from 'src/app/common/components/base/abstract.component';
 import { BehaviorSubject } from 'rxjs';
 import { filter } from 'rxjs/operators';
+import { SubjectManager } from 'src/app/common/subject.manager';
 
 @Component({
     selector: 'app-table',
@@ -12,7 +13,7 @@ import { filter } from 'rxjs/operators';
 })
 export class TableComponent<T=any> extends AbstractComponent implements OnInit {
 
-    constructor() {
+    constructor(protected subjectManager: SubjectManager) {
         super();
     }
 
@@ -20,7 +21,8 @@ export class TableComponent<T=any> extends AbstractComponent implements OnInit {
     @Input() dataSourceSubject: BehaviorSubject<T[]> = null;
     dataSource: MatTableDataSource<T> = null;
     filterValues = {};
-    @Input() columnFields: { label: string, key: string, sortable:boolean }[] = [];
+    @Input() tableUpdateKey: string = '';
+    @Input() columnFields: { label: string, key: string, sortable:boolean, valueAccessor: any } [] = [];
     displayedColumns: string[] = [];
     @Input() filterFields: {
         label: string,
@@ -36,19 +38,18 @@ export class TableComponent<T=any> extends AbstractComponent implements OnInit {
 
     ngOnInit(): void {
         this.displayedColumns = this.columnFields.map(f => f.key);
+        this.initDataSource();
         if (this.dataSourceSubject) {
             this.subscriptions.push(
                 this.dataSourceSubject.pipe(filter(data => data !== null)).subscribe((data: T[]) => {
-                    this.initDataSource(data);
+                    this.dataSource.data = data;
                 }),
             );
-        } else {
-            this.initDataSource(this.data);
         }
     }
 
-    initDataSource(data: T[]) {
-        this.dataSource = new MatTableDataSource(data);
+    initDataSource() {
+        this.dataSource = new MatTableDataSource(this.data);
         this.dataSource.filterPredicate = this.createFilter();
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;

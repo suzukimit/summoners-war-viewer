@@ -1,8 +1,8 @@
-import { Component, Inject } from '@angular/core';
+import { Component } from '@angular/core';
 import { AbstractComponent } from 'src/app/common/components/base/abstract.component';
 import { SubjectManager } from 'src/app/common/subject.manager';
 import { Unit } from 'src/app/unit/unit';
-import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material';
+import { MatDialog } from '@angular/material';
 import { UnitDialogComponent } from 'src/app/unit/components/unit-dialog/unit-dialog.component';
 
 @Component({
@@ -41,7 +41,7 @@ export class UnitsComponent extends AbstractComponent {
 
     clickRow(unit: Unit) {
         const dialogRef = this.dialog.open(UnitDialogComponent, {
-            width: '1000px',
+            width: '1440px',
             data: unit
         });
         dialogRef.afterClosed().subscribe(result => {

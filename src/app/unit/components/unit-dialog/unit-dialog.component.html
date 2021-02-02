@@ -1,10 +1,18 @@
-<h1 mat-dialog-title>{{data.name}}</h1>
+<h1 mat-dialog-title>{{unit.name}}</h1>
 <div mat-dialog-content>
+    <h3>ステータス</h3>
     <app-table
-        [data]="[data]"
-        [columnFields]=columnFields
+        [data]="[unit]"
+        [columnFields]=unitFields
     ></app-table>
+    <h3>装備中のルーン</h3>
+    <app-table
+        [data]="unit.runes"
+        [columnFields]=runeFields
+    ></app-table>
+    <h3>ルーンのスコアレート</h3>
+    <app-score-rate-form [subject]=subjectManager.unitScoreRate></app-score-rate-form>
 </div>
 <div mat-dialog-actions>
-    <button mat-button [mat-dialog-close]="data" cdkFocusInitial>保存？</button>
+    <button mat-button [mat-dialog-close]="unit" cdkFocusInitial>保存？</button>
 </div>

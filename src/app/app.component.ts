@@ -37,7 +37,6 @@ export class AppComponent extends AbstractComponent {
                     const runes = e.runes.map(rune => Object.assign(new Rune(), rune));
                     this.subjectManager.runes.next([].concat(...unitRunes).concat(runes));
                     this.subjectManager.units.next(units.filter(unit => unit.class >= 5 || unit.runes.length > 0));
-                    console.log(units);
                 }),
         );
     }

@@ -1,0 +1,36 @@
+<form [formGroup]="formGroup" (ngSubmit)="onUpdateScoreRate()" class="scoreRateForm">
+    <mat-form-field class="form-field">
+        <input matInput type="number" placeholder="hp%" formControlName="hp">
+    </mat-form-field>
+    <mat-form-field class="form-field">
+        <input matInput type="number" step="0.01" placeholder="hp+" formControlName="hpFlat">
+    </mat-form-field>
+    <mat-form-field class="form-field">
+        <input matInput type="number" placeholder="攻撃力%" formControlName="atk">
+    </mat-form-field>
+    <mat-form-field class="form-field">
+        <input matInput type="number" step="0.1" placeholder="攻撃力+" formControlName="atkFlat">
+    </mat-form-field>
+    <mat-form-field class="form-field">
+        <input matInput type="number" placeholder="防御力%" formControlName="def">
+    </mat-form-field>
+    <mat-form-field class="form-field">
+        <input matInput type="number" step="0.1" placeholder="防御力+" formControlName="defFlat">
+    </mat-form-field>
+    <mat-form-field class="form-field">
+        <input matInput type="number" placeholder="速度" formControlName="spd">
+    </mat-form-field>
+    <mat-form-field class="form-field">
+        <input matInput type="number" placeholder="クリ率" formControlName="cliRate">
+    </mat-form-field>
+    <mat-form-field class="form-field">
+        <input matInput type="number" placeholder="クリダメ" formControlName="cliDmg">
+    </mat-form-field>
+    <mat-form-field class="form-field">
+        <input matInput type="number" placeholder="抵抗" formControlName="resist">
+    </mat-form-field>
+    <mat-form-field class="form-field">
+        <input matInput type="number" placeholder="的中" formControlName="accuracy">
+    </mat-form-field>
+    <button type="submit" mat-button color="primary" [disabled]="formGroup.invalid">スコア更新</button>
+</form>

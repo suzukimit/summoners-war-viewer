@@ -8,7 +8,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import {
-    MatButtonModule, MatDialogModule,
+    MatButtonModule,
+    MatDialogModule,
     MatInputModule,
     MatPaginatorModule,
     MatSelectModule,
@@ -21,8 +22,9 @@ import { SubjectManager } from 'src/app/common/subject.manager';
 import { AbstractComponent } from 'src/app/common/components/base/abstract.component';
 import { UnitsComponent } from 'src/app/unit/components/units/units.component';
 import { TableComponent } from './common/components/table/table.component';
-import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { UnitDialogComponent } from 'src/app/unit/components/unit-dialog/unit-dialog.component';
+import { ScoreRateFormComponent } from './rune/components/runes/score-rate-form/score-rate-form.component';
 
 @NgModule({
     declarations: [
@@ -32,12 +34,13 @@ import { UnitDialogComponent } from 'src/app/unit/components/unit-dialog/unit-di
         UnitsComponent,
         UnitDialogComponent,
         TableComponent,
+        ScoreRateFormComponent,
     ],
     imports: [
         BrowserModule,
         AppRoutingModule,
         HttpClientModule,
-        FormsModule,
+        ReactiveFormsModule,
         BrowserAnimationsModule,
         MatTableModule,
         MatPaginatorModule,
