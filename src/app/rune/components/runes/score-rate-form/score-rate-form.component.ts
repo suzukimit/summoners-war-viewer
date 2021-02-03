@@ -1,9 +1,9 @@
 import { Component, Input } from '@angular/core';
 import { AbstractComponent } from 'src/app/common/components/base/abstract.component';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { SubjectManager } from 'src/app/common/subject.manager';
 import { ScoreRate } from 'src/app/rune/rune';
 import { BehaviorSubject } from 'rxjs';
+import { filter } from 'rxjs/operators';
 
 @Component({
     selector: 'app-score-rate-form',
@@ -12,15 +12,27 @@ import { BehaviorSubject } from 'rxjs';
 })
 export class ScoreRateFormComponent extends AbstractComponent {
 
-    constructor(protected subjectManager: SubjectManager, protected fb: FormBuilder) {
+    constructor(protected fb: FormBuilder) {
         super();
     }
 
     scoreRate: ScoreRate = new ScoreRate();
     formGroup: FormGroup = null;
-    @Input() subject: BehaviorSubject<ScoreRate> = null;
+    @Input() loadedSubject: BehaviorSubject<ScoreRate> = null;
+    @Input() savedSubject: BehaviorSubject<ScoreRate> = null;
 
     ngOnInit() {
+        this.initForm();
+        if (this.loadedSubject) {
+            this.subscriptions.push(
+                this.loadedSubject.pipe(filter(rate => rate !== null)).subscribe(rate => {
+                    this.updateForm(rate);
+                }),
+            );
+        }
+    }
+
+    initForm() {
         this.formGroup = this.fb.group({
             hp: [1, [Validators.required]],
             hpFlat: [0.01, [Validators.required]],
@@ -36,6 +48,22 @@ export class ScoreRateFormComponent extends AbstractComponent {
         });
     }
 
+    updateForm(scoreRate: ScoreRate) {
+        this.formGroup.patchValue({
+            hp: scoreRate.hp,
+            hpFlat: scoreRate.hpFlat,
+            atk: scoreRate.atk,
+            atkFlat: scoreRate.atkFlat,
+            def: scoreRate.def,
+            defFlat: scoreRate.defFlat,
+            spd: scoreRate.spd,
+            cliRate: scoreRate.cliRate,
+            cliDmg: scoreRate.cliDmg,
+            resist: scoreRate.resist,
+            accuracy: scoreRate.accuracy,
+        });
+    }
+
     onUpdateScoreRate() {
         this.scoreRate.hp = this.formGroup.controls.hp.value;
         this.scoreRate.hpFlat = this.formGroup.controls.hpFlat.value;
@@ -48,6 +76,6 @@ export class ScoreRateFormComponent extends AbstractComponent {
         this.scoreRate.cliDmg = this.formGroup.controls.cliDmg.value;
         this.scoreRate.resist = this.formGroup.controls.resist.value;
         this.scoreRate.accuracy = this.formGroup.controls.accuracy.value;
-        this.subject.next(this.scoreRate);
+        this.savedSubject.next(this.scoreRate);
     }
 }

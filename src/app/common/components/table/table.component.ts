@@ -35,6 +35,7 @@ export class TableComponent<T=any> extends AbstractComponent implements OnInit {
     @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
     @ViewChild(MatSort, {static: true}) sort: MatSort;
     @Output() clickRowEvent = new EventEmitter<T>();
+    @Input() rowRouterLink: (row: T) => string = null;
 
     ngOnInit(): void {
         this.displayedColumns = this.columnFields.map(f => f.key);
@@ -62,7 +63,11 @@ export class TableComponent<T=any> extends AbstractComponent implements OnInit {
                 .filter(key => conditions[key])
                 .map(key => {
                     const customFunction = this.filterFields.find(field => field.key === key).customFunction;
-                    return customFunction ? customFunction(data, conditions[key]) : data[key] === conditions[key];
+                    if (customFunction) {
+                        return customFunction;
+                    } else {
+                        return Array.isArray(conditions[key]) ? (conditions[key] as Array<any>).includes(data[key]) : data[key] === conditions[key];
+                    }
                 })
                 .every(e => e);
         };

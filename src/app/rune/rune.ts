@@ -184,24 +184,32 @@ export class Rune {
         } else {
             types = types.filter(type => this.subOptions.includes(Number(type[0])));
         }
-        const type = types.sort(this.sort)[0];
+        const type = types.sort(this.sortEffectType)[0];
         if (isNewOption) {
             potentialOptions.push(type[0]);
         }
         return type[1].maximumGrow * type[1].scoreRate;
     }
 
-    sort(a, b) {
+    sortByScore(scoreRate: ScoreRate) {
+        return (a: Rune, b: Rune) => { return b.calcScore(scoreRate) - a.calcScore(scoreRate) };
+    }
+
+    sortEffectType(a, b) {
         return b[1].maximumGrow * b[1].scoreRate - a[1].maximumGrow * a[1].scoreRate;
     }
 
-    sortWithEnhanceHero(a, b) {
+    sortEffectTypeWithEnhanceHero(a, b) {
         return (b[1].maximumGrow + b[1].enhanceHero) * b[1].scoreRate - (a[1].maximumGrow + a[1].enhanceHero) * a[1].scoreRate;
     }
 
-    sortWithEnhanceLegend(a, b) {
+    sortEffectTypeWithEnhanceLegend(a, b) {
         return (b[1].maximumGrow + b[1].enhanceLegend) * b[1].scoreRate - (a[1].maximumGrow + a[1].enhanceLegend) * a[1].scoreRate;
     }
+}
+
+export function sortByScore(scoreRate: ScoreRate) {
+    return (a: Rune, b: Rune) => { return b.calcScore(scoreRate) - a.calcScore(scoreRate) };
 }
 
 export class ScoreRate {
@@ -430,7 +438,7 @@ export const extra = {
     15: '古代レジェンド',
 };
 
-export const runeColumnFields = [
+export const runeColumnAllFields = [
     {
         label: 'セット',
         key: 'setView',
@@ -456,6 +464,12 @@ export const runeColumnFields = [
         valueAccessor: null,
     },
     {
+        label: 'サブ1',
+        key: 'sub1View',
+        sortable: false,
+        valueAccessor: null,
+    },
+    {
         label: 'サブ1（タイプ）',
         key: 'sub1TypeView',
         sortable: false,
@@ -465,6 +479,12 @@ export const runeColumnFields = [
         label: 'サブ1（数値）',
         key: 'sub1Value',
         sortable: true,
+        valueAccessor: null,
+    },
+    {
+        label: 'サブ2',
+        key: 'sub2View',
+        sortable: false,
         valueAccessor: null,
     },
     {
@@ -480,6 +500,12 @@ export const runeColumnFields = [
         valueAccessor: null,
     },
     {
+        label: 'サブ3',
+        key: 'sub3View',
+        sortable: false,
+        valueAccessor: null,
+    },
+    {
         label: 'サブ3（タイプ）',
         key: 'sub3TypeView',
         sortable: false,
@@ -489,6 +515,12 @@ export const runeColumnFields = [
         label: 'サブ3（数値）',
         key: 'sub3Value',
         sortable: true,
+        valueAccessor: null,
+    },
+    {
+        label: 'サブ4',
+        key: 'sub4View',
+        sortable: false,
         valueAccessor: null,
     },
     {
@@ -516,3 +548,13 @@ export const runeColumnFields = [
         valueAccessor: null,
     },
 ];
+
+export function runeColumnFields(useSimpleSubView: boolean = false, excludeFields: string[] = []) {
+    let fields = runeColumnAllFields.filter(f => !excludeFields.includes(f.key));
+    if (useSimpleSubView) {
+        fields = fields.filter(f => !['sub1Value', 'sub2Value', 'sub3Value', 'sub4Value', 'sub1TypeView', 'sub2TypeView', 'sub3TypeView', 'sub4TypeView'].includes(f.key));
+    } else {
+        fields = fields.filter(f => !['sub1View', 'sub2View', 'sub3View', 'sub4View'].includes(f.key));
+    }
+    return fields;
+}

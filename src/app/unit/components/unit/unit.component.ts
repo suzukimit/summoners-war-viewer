@@ -1,25 +1,24 @@
-import { Component, Inject, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
-import { Unit } from 'src/app/unit/unit';
-import { Rune, runeColumnFields, ScoreRate, sortByScore } from 'src/app/rune/rune';
-import { SubjectManager } from 'src/app/common/subject.manager';
-import { filter } from 'rxjs/operators';
+import { Component, OnInit } from '@angular/core';
 import { AbstractComponent } from 'src/app/common/components/base/abstract.component';
+import { SubjectManager } from 'src/app/common/subject.manager';
+import { Rune, runeColumnFields, ScoreRate, sortByScore } from 'src/app/rune/rune';
+import { filter } from 'rxjs/operators';
+import { Unit } from 'src/app/unit/unit';
+import { combineLatest } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
-  selector: 'app-unit-dialog',
-  templateUrl: './unit-dialog.component.html',
-  styleUrls: ['./unit-dialog.component.scss']
+    selector: 'app-unit',
+    templateUrl: './unit.component.html',
+    styleUrls: ['./unit.component.scss']
 })
-export class UnitDialogComponent extends AbstractComponent {
+export class UnitComponent extends AbstractComponent {
 
-    constructor(
-        public dialogRef: MatDialogRef<UnitDialogComponent>,
-        @Inject(MAT_DIALOG_DATA) public unit: Unit,
-        protected subjectManager: SubjectManager) {
+    constructor(protected route: ActivatedRoute, protected subjectManager: SubjectManager) {
         super();
     }
 
+    unit: Unit = null;
     scoreRate: ScoreRate = new ScoreRate();
     runes: Rune[] = [];
 
@@ -74,11 +73,16 @@ export class UnitDialogComponent extends AbstractComponent {
     recommendedRuneFields = this.runeFields.filter(r => r.key !== 'slot_no');
 
     ngOnInit(): void {
-        if (localStorage.getItem(this.unit.id)) {
-            this.scoreRate = Object.assign(new ScoreRate(), JSON.parse(localStorage.getItem(this.unit.id)));
-            this.subjectManager.unitScoreRateLoaded.next(this.scoreRate);
-        }
         this.subscriptions.push(
+            combineLatest(this.route.params, this.subjectManager.units).pipe(
+                filter(([params, units]) => units !== null)
+            ).subscribe(([params, units]) => {
+                this.unit = units.find(u => u.id === params.id);
+                if (localStorage.getItem(this.unit.id)) {
+                    this.scoreRate = Object.assign(new ScoreRate(), JSON.parse(localStorage.getItem(this.unit.id)));
+                    this.subjectManager.unitScoreRateLoaded.next(this.scoreRate);
+                }
+            }),
             this.subjectManager.runes.pipe(filter(rune => rune !== null)).subscribe(runes => {
                 this.runes = runes;
                 this.streamRecommendedRunes();

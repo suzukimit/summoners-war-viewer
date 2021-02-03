@@ -1,5 +1,8 @@
-<mat-toolbar>
+<mat-toolbar class="mat-primary">
     <span>Summoners War Viewer</span>
+    <div class="spacer"></div>
+    <a mat-button routerLink="runes" class="header-button">ルーン</a>
+    <a mat-button routerLink="artifacts" class="header-button">アーティファクト</a>
+    <a mat-button routerLink="units" class="header-button">モンスター</a>
 </mat-toolbar>
-<app-runes></app-runes>
-<app-units></app-units>
+<router-outlet></router-outlet>

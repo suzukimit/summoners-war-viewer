@@ -11,14 +11,16 @@ export class Unit {
     experience = 0;
     homunculus = 0; //ホムンクルスかどうかのboolean値？
     homunculus_name = "";
-    unit_id = 0;
+    unit_id = 0;    //ユニット毎に振られているID？
     unit_level = 0;
-    unit_master_id = 0; //0
-    wizard_id = 0;
+    unit_master_id = 0; //ユニットの種類毎に振られているID？（同じユニットは同じIDになっている）
+    wizard_id = 0;  //召喚士のID？なので全部同じになっている？
+    get id() { return this.unit_id.toString() }
 
     artifacts = [];
     trans_items = [];   //?
     runes: Rune[];
+    get applicableRunes() { return ['刃', '暴走'] }
     skills = [];
     awakening_info = {
         date_add: "",
@@ -56,8 +58,8 @@ export class Unit {
 
     //TODO アーティファクトとルーンセット効果
     statusView(key: string, runeFlatKey: string, runePercentKey: string): string {
-        const flatValue = this.runes.map(r => r[runeFlatKey]).reduce((accumulator, currentValue) => accumulator + currentValue);
-        const percentValue = runePercentKey ? this.runes.map(r => r[runePercentKey]).reduce((accumulator, currentValue) => accumulator + currentValue) : 0;
+        const flatValue = this.runes.map(r => r[runeFlatKey]).reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+        const percentValue = runePercentKey ? this.runes.map(r => r[runePercentKey]).reduce((accumulator, currentValue) => accumulator + currentValue, 0) : 0;
         const runeValue = flatValue + Math.ceil(percentValue * this[key] / 100);
         return `${this[key]} + ${runeValue}`;
     }

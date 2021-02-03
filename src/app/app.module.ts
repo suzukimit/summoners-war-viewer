@@ -8,13 +8,13 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import {
-    MatButtonModule,
-    MatDialogModule,
+    MatButtonModule, MatButtonToggleModule, MatCardModule,
+    MatDialogModule, MatIconModule,
     MatInputModule,
     MatPaginatorModule,
     MatSelectModule,
     MatSlideToggleModule,
-    MatSortModule
+    MatSortModule, MatTabsModule
 } from '@angular/material';
 import { RuneService } from 'src/app/rune/rune.service';
 import { RunesComponent } from 'src/app/rune/components/runes/runes.component';
@@ -25,6 +25,8 @@ import { TableComponent } from './common/components/table/table.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { UnitDialogComponent } from 'src/app/unit/components/unit-dialog/unit-dialog.component';
 import { ScoreRateFormComponent } from './rune/components/runes/score-rate-form/score-rate-form.component';
+import { UnitComponent } from 'src/app/unit/components/unit/unit.component';
+import { ArtifactsComponent } from 'src/app/artifacts/components/artifacts/artifacts.component';
 
 @NgModule({
     declarations: [
@@ -35,6 +37,8 @@ import { ScoreRateFormComponent } from './rune/components/runes/score-rate-form/
         UnitDialogComponent,
         TableComponent,
         ScoreRateFormComponent,
+        UnitComponent,
+        ArtifactsComponent,
     ],
     imports: [
         BrowserModule,
@@ -49,8 +53,12 @@ import { ScoreRateFormComponent } from './rune/components/runes/score-rate-form/
         MatInputModule,
         MatSelectModule,
         MatButtonModule,
+        MatButtonToggleModule,
         MatSlideToggleModule,
         MatDialogModule,
+        MatTabsModule,
+        MatIconModule,
+        MatCardModule,
     ],
     providers: [
         SubjectManager,

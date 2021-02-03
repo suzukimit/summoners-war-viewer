@@ -10,7 +10,14 @@ export class SubjectManager {
     runes: BehaviorSubject<Rune[]>;
     runesScoreRate: BehaviorSubject<ScoreRate>;
     units: BehaviorSubject<Unit[]>;
-    unitScoreRate: BehaviorSubject<ScoreRate>;
+    unitScoreRateLoaded: BehaviorSubject<ScoreRate>;
+    unitScoreRateSaved: BehaviorSubject<ScoreRate>;
+    unitRecommendedRunes1: BehaviorSubject<Rune[]>;
+    unitRecommendedRunes2: BehaviorSubject<Rune[]>;
+    unitRecommendedRunes3: BehaviorSubject<Rune[]>;
+    unitRecommendedRunes4: BehaviorSubject<Rune[]>;
+    unitRecommendedRunes5: BehaviorSubject<Rune[]>;
+    unitRecommendedRunes6: BehaviorSubject<Rune[]>;
 
     constructor() {
         this.reset();
@@ -20,6 +27,13 @@ export class SubjectManager {
         this.runes = new BehaviorSubject<Rune[]>(null);
         this.units = new BehaviorSubject<Unit[]>(null);
         this.runesScoreRate = new BehaviorSubject<ScoreRate>(null);
-        this.unitScoreRate = new BehaviorSubject<ScoreRate>(null);
+        this.unitScoreRateLoaded = new BehaviorSubject<ScoreRate>(null);
+        this.unitScoreRateSaved = new BehaviorSubject<ScoreRate>(null);
+        this.unitRecommendedRunes1 = new BehaviorSubject<Rune[]>(null);
+        this.unitRecommendedRunes2 = new BehaviorSubject<Rune[]>(null);
+        this.unitRecommendedRunes3 = new BehaviorSubject<Rune[]>(null);
+        this.unitRecommendedRunes4 = new BehaviorSubject<Rune[]>(null);
+        this.unitRecommendedRunes5 = new BehaviorSubject<Rune[]>(null);
+        this.unitRecommendedRunes6 = new BehaviorSubject<Rune[]>(null);
     }
 }

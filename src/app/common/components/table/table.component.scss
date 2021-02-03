@@ -1,3 +1,10 @@
 table {
     width: 100%;
+    tr {
+        td a {
+            display: block;
+            line-height: 48px;
+            text-decoration: none;
+        }
+    }
 }

@@ -30,6 +30,10 @@ export class UnitsComponent extends AbstractComponent {
             key: 'unit_master_id',
         },
         {
+            label: 'unit_id',
+            key: 'unit_id',
+        },
+        {
             label: 'クラス',
             key: 'class',
         },
@@ -48,6 +52,8 @@ export class UnitsComponent extends AbstractComponent {
             console.log('The dialog was closed');
         });
     }
+
+    rowRouterLink = (unit: Unit) => `/units/${unit.id}`;
 
     ngOnInit(): void {
     }

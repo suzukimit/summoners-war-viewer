@@ -17,7 +17,7 @@ export class RunesComponent extends AbstractComponent {
     }
     runes: Rune[] = [];
     scoreRate: ScoreRate = new ScoreRate();
-    columnFields = runeColumnFields.concat([
+    columnFields = runeColumnFields().concat([
         {
             label: 'スコア',
             key: 'score',
