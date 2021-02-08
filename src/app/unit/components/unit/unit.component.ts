@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { AbstractComponent } from 'src/app/common/components/base/abstract.component';
 import { SubjectManager } from 'src/app/common/subject.manager';
-import { Rune, runeColumnFields, ScoreRate, sortByScore } from 'src/app/rune/rune';
+import { globalScoreRate, Rune, runeColumnFields, runeEffectType, runeSet, ScoreRate } from 'src/app/rune/rune';
 import { filter } from 'rxjs/operators';
 import { Unit } from 'src/app/unit/unit';
 import { combineLatest } from 'rxjs';
@@ -19,7 +19,6 @@ export class UnitComponent extends AbstractComponent {
     }
 
     unit: Unit = null;
-    scoreRate: ScoreRate = new ScoreRate();
     runes: Rune[] = [];
 
     unitFields = [
@@ -61,61 +60,100 @@ export class UnitComponent extends AbstractComponent {
             label: 'スコア',
             key: 'score',
             sortable: true,
-            valueAccessor: (rune: Rune) => { return rune.calcScore(this.scoreRate) },
+            valueAccessor: null,
         },
         {
             label: 'スコア+',
             key: 'potentialScore',
             sortable: true,
-            valueAccessor: (rune: Rune) => { return rune.calcPotentialScore(this.scoreRate) },
+            valueAccessor: null,
         }
     ]);
     recommendedRuneFields = this.runeFields.filter(r => r.key !== 'slot_no');
+    recommentedRuneFilterFields = [
+        {
+            label: 'セット',
+            key: 'set_id',
+            type: 'select',
+            options: Object.entries(runeSet).map(e => ({ value: Number(e[0]), viewValue: e[1] })),
+        },
+        {
+            label: 'メイン',
+            key: 'mainType',
+            type: 'select',
+            options: Object.entries(runeEffectType).map(e => ({ value: Number(e[0]), viewValue: e[1].label })),
+        },
+        {
+            label: 'サブ1',
+            key: 'sub1Type',
+            type: 'select',
+            options: Object.entries(runeEffectType).map(e => ({ value: Number(e[0]), viewValue: e[1].label })),
+            customFunction: (data: Rune, value): boolean => {
+                return [data.sub1Type, data.sub2Type, data.sub3Type, data.sub4Type].includes(value);
+            },
+        },
+        {
+            label: 'サブ2',
+            key: 'sub2Type',
+            type: 'select',
+            options: Object.entries(runeEffectType).map(e => ({ value: Number(e[0]), viewValue: e[1].label })),
+            customFunction: (data: Rune, value): boolean => {
+                return [data.sub1Type, data.sub2Type, data.sub3Type, data.sub4Type].includes(value);
+            },
+        },
+        {
+            label: 'サブ3',
+            key: 'sub3Type',
+            type: 'select',
+            options: Object.entries(runeEffectType).map(e => ({ value: Number(e[0]), viewValue: e[1].label })),
+            customFunction: (data: Rune, value): boolean => {
+                return [data.sub1Type, data.sub2Type, data.sub3Type, data.sub4Type].includes(value);
+            },
+        },
+        {
+            label: 'サブ4',
+            key: 'sub4Type',
+            type: 'select',
+            options: Object.entries(runeEffectType).map(e => ({ value: Number(e[0]), viewValue: e[1].label })),
+            customFunction: (data: Rune, value): boolean => {
+                return [data.sub1Type, data.sub2Type, data.sub3Type, data.sub4Type].includes(value);
+            },
+        },
+        {
+            label: '装備可能のみ',
+            key: 'canBeEquipped',
+            type: 'toggle',
+            customFunction: (data: Rune, value: any): boolean => data.unit == null,
+        },
+    ];
 
     ngOnInit(): void {
+        globalScoreRate.init();
         this.subscriptions.push(
-            combineLatest(this.route.params, this.subjectManager.units).pipe(
-                filter(([params, units]) => units !== null)
-            ).subscribe(([params, units]) => {
+            combineLatest(this.route.params, this.subjectManager.units, this.subjectManager.runes).pipe(
+                filter(([params, units, runes]) => units !== null && runes !== null)
+            ).subscribe(([params, units, runes]) => {
                 this.unit = units.find(u => u.id === params.id);
                 if (localStorage.getItem(this.unit.id)) {
-                    this.scoreRate = Object.assign(new ScoreRate(), JSON.parse(localStorage.getItem(this.unit.id)));
-                    this.subjectManager.unitScoreRateLoaded.next(this.scoreRate);
+                    globalScoreRate.copyFrom(Object.assign(new ScoreRate(), JSON.parse(localStorage.getItem(this.unit.id))));
                 }
-            }),
-            this.subjectManager.runes.pipe(filter(rune => rune !== null)).subscribe(runes => {
                 this.runes = runes;
-                this.streamRecommendedRunes();
-            }),
-            this.subjectManager.unitScoreRateSaved.pipe(filter(rate => rate !== null)).subscribe(rate => {
-                this.scoreRate = rate;
-                localStorage.setItem(this.unit.id, JSON.stringify(rate));
                 this.streamRecommendedRunes();
             }),
         );
     }
 
-    onRuneSetButtonChange(runeSetValues: string[]) {
-        this.streamRecommendedRunes(runeSetValues);
+    onUpdateScoreRate() {
+        localStorage.setItem(this.unit.id, JSON.stringify(globalScoreRate));
+        this.streamRecommendedRunes();
     }
 
-    streamRecommendedRunes(runeSetValues: string[] = []) {
-        this.subjectManager.unitRecommendedRunes1.next(this.top10Runes({ slotNo: 1, runeSetValues: runeSetValues }));
-        this.subjectManager.unitRecommendedRunes2.next(this.top10Runes({ slotNo: 2, runeSetValues: runeSetValues }));
-        this.subjectManager.unitRecommendedRunes3.next(this.top10Runes({ slotNo: 3, runeSetValues: runeSetValues }));
-        this.subjectManager.unitRecommendedRunes4.next(this.top10Runes({ slotNo: 4, runeSetValues: runeSetValues }));
-        this.subjectManager.unitRecommendedRunes5.next(this.top10Runes({ slotNo: 5, runeSetValues: runeSetValues }));
-        this.subjectManager.unitRecommendedRunes6.next(this.top10Runes({ slotNo: 6, runeSetValues: runeSetValues }));
-    }
-
-    top10Runes({ slotNo = 0, runeSetValues = [], canBeEquipped = true }): Rune[] {
-        let runes = this.runes.filter(r => r.slot_no === slotNo);
-        if (runeSetValues.length > 0) {
-            runes = runes.filter(r => runeSetValues.includes(r.set_id.toString()));
-        }
-        if (canBeEquipped) {
-            runes = runes.filter(r => r.unit == null);
-        }
-        return runes.sort(sortByScore(this.scoreRate)).slice(0, 9);
+    streamRecommendedRunes() {
+        this.subjectManager.unitRecommendedRunes1.next(this.runes.filter(r => r.slot_no === 1).sort((a, b) => b.score - a.score));
+        this.subjectManager.unitRecommendedRunes2.next(this.runes.filter(r => r.slot_no === 2).sort((a, b) => b.score - a.score));
+        this.subjectManager.unitRecommendedRunes3.next(this.runes.filter(r => r.slot_no === 3).sort((a, b) => b.score - a.score));
+        this.subjectManager.unitRecommendedRunes4.next(this.runes.filter(r => r.slot_no === 4).sort((a, b) => b.score - a.score));
+        this.subjectManager.unitRecommendedRunes5.next(this.runes.filter(r => r.slot_no === 5).sort((a, b) => b.score - a.score));
+        this.subjectManager.unitRecommendedRunes6.next(this.runes.filter(r => r.slot_no === 6).sort((a, b) => b.score - a.score));
     }
 }

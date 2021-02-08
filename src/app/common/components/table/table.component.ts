@@ -66,7 +66,11 @@ export class TableComponent<T=any> extends AbstractComponent implements OnInit {
                     if (customFunction) {
                         return customFunction;
                     } else {
-                        return Array.isArray(conditions[key]) ? (conditions[key] as Array<any>).includes(data[key]) : data[key] === conditions[key];
+                        if (Array.isArray(conditions[key])) {
+                            return conditions[key].length === 0 ? true : conditions[key].includes(data[key]);
+                        } else {
+                            return data[key] === conditions[key];
+                        }
                     }
                 })
                 .every(e => e);

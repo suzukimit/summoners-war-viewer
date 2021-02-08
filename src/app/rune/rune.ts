@@ -122,30 +122,30 @@ export class Rune {
         }
     }
 
-    calcScore(rate: ScoreRate) {
+    get score() {
         let result = 0;
-        result += this.calc(this.prefixType, this.prefixValue, rate);
-        result += this.calc(this.sub1Type, this.sub1Value, rate);
-        result += this.calc(this.sub2Type, this.sub2Value, rate);
-        result += this.calc(this.sub3Type, this.sub3Value, rate);
-        result += this.calc(this.sub4Type, this.sub4Value, rate);
+        result += this.calc(this.prefixType, this.prefixValue);
+        result += this.calc(this.sub1Type, this.sub1Value);
+        result += this.calc(this.sub2Type, this.sub2Value);
+        result += this.calc(this.sub3Type, this.sub3Value);
+        result += this.calc(this.sub4Type, this.sub4Value);
         return result;
     }
 
-    calcPotentialScore(rate: ScoreRate) {
-        return this._calcPotentialScore(rate, {});
+    get potentialScore() {
+        return this._calcPotentialScore({});
     }
 
-    calcPotentialScore2(rate: ScoreRate) {
-        return this._calcPotentialScore(rate, { isUseEnhance: true });
+    get potentialScore2() {
+        return this._calcPotentialScore({ isUseEnhance: true });
     }
 
-    calcPotentialScore3(rate: ScoreRate) {
-        return this._calcPotentialScore(rate, { isUseEnhance: true, isUseGem: true });
+    get potentialScore3() {
+        return this._calcPotentialScore({ isUseEnhance: true, isUseGem: true });
     }
 
-    private _calcPotentialScore(rate: ScoreRate, { isUseEnhance = false, isUseGem = false }) {
-        let result = this.calcScore(rate);
+    private _calcPotentialScore({ isUseEnhance = false, isUseGem = false }) {
+        let result = this.score;
         // 強化段階が12未満
         let enhanceableCount = this.upgrade_curr >= 12 ? 0 : (4 - this.upgrade_curr / 3);
         let emptySubOptionCount = (this.sub1Type === 0 ? 1 : 0) + (this.sub2Type === 0 ? 1 : 0)
@@ -166,8 +166,8 @@ export class Rune {
         return result;
     }
 
-    private calc(type, value, rate: ScoreRate) {
-        return value * rate.fromRuneEffectType(type);
+    private calc(type, value) {
+        return value * globalScoreRate.fromRuneEffectType(type);
     }
 
     private maxValue({ isNewOption = false, potentialOptions = [] }): number {
@@ -192,7 +192,7 @@ export class Rune {
     }
 
     sortByScore(scoreRate: ScoreRate) {
-        return (a: Rune, b: Rune) => { return b.calcScore(scoreRate) - a.calcScore(scoreRate) };
+        return (a: Rune, b: Rune) => { return b.score - a.score };
     }
 
     sortEffectType(a, b) {
@@ -206,10 +206,6 @@ export class Rune {
     sortEffectTypeWithEnhanceLegend(a, b) {
         return (b[1].maximumGrow + b[1].enhanceLegend) * b[1].scoreRate - (a[1].maximumGrow + a[1].enhanceLegend) * a[1].scoreRate;
     }
-}
-
-export function sortByScore(scoreRate: ScoreRate) {
-    return (a: Rune, b: Rune) => { return b.calcScore(scoreRate) - a.calcScore(scoreRate) };
 }
 
 export class ScoreRate {
@@ -240,7 +236,24 @@ export class ScoreRate {
             default: return 0;
         }
     }
+    copyFrom(scoreRate: ScoreRate) {
+        this.hp = scoreRate.hp;
+        this.hpFlat = scoreRate.hpFlat;
+        this.atk = scoreRate.atk;
+        this.atkFlat = scoreRate.atkFlat;
+        this.def = scoreRate.def;
+        this.defFlat = scoreRate.defFlat;
+        this.spd = scoreRate.spd;
+        this.cliRate = scoreRate.cliRate;
+        this.cliDmg = scoreRate.cliDmg;
+        this.resist = scoreRate.resist;
+        this.accuracy = scoreRate.accuracy;
+    }
+    init() {
+        this.copyFrom(new ScoreRate());
+    }
 }
+export const globalScoreRate = new ScoreRate();
 
 export const runeSet = {
     1: '元気',

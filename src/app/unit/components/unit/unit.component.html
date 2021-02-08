@@ -30,10 +30,7 @@
             <mat-card-title>スコア指数</mat-card-title>
         </mat-card-header>
         <mat-card-content>
-            <app-score-rate-form
-                [loadedSubject]=subjectManager.unitScoreRateLoaded
-                [savedSubject]=subjectManager.unitScoreRateSaved
-            ></app-score-rate-form>
+            <app-score-rate-form (onUpdate)=onUpdateScoreRate()></app-score-rate-form>
         </mat-card-content>
     </mat-card>
     <mat-card class="runes-top10-card">
@@ -41,42 +38,20 @@
             <mat-card-title>おすすめのルーン</mat-card-title>
         </mat-card-header>
         <mat-card-content>
-            <mat-button-toggle-group [multiple]=true (change)=onRuneSetButtonChange($event.value) name="runeSet" aria-label="Rune Set">
-                <mat-button-toggle value="1">元気</mat-button-toggle>
-                <mat-button-toggle value="2">守護</mat-button-toggle>
-                <mat-button-toggle value="3">迅速</mat-button-toggle>
-                <mat-button-toggle value="4">刃</mat-button-toggle>
-                <mat-button-toggle value="5">激怒</mat-button-toggle>
-                <mat-button-toggle value="6">集中</mat-button-toggle>
-                <mat-button-toggle value="7">忍耐</mat-button-toggle>
-                <mat-button-toggle value="8">猛攻</mat-button-toggle>
-                <mat-button-toggle value="10">絶望</mat-button-toggle>
-                <mat-button-toggle value="11">吸血</mat-button-toggle>
-                <mat-button-toggle value="13">暴走</mat-button-toggle>
-                <mat-button-toggle value="14">果報</mat-button-toggle>
-                <mat-button-toggle value="15">意志</mat-button-toggle>
-                <mat-button-toggle value="16">保護</mat-button-toggle>
-                <mat-button-toggle value="17">反撃</mat-button-toggle>
-                <mat-button-toggle value="18">破壊</mat-button-toggle>
-                <mat-button-toggle value="19">闘志</mat-button-toggle>
-                <mat-button-toggle value="20">決意</mat-button-toggle>
-                <mat-button-toggle value="21">高揚</mat-button-toggle>
-                <mat-button-toggle value="22">命中</mat-button-toggle>
-                <mat-button-toggle value="23">根性</mat-button-toggle>
-            </mat-button-toggle-group>
-            <mat-button-toggle-group [multiple]=true (change)=onRuneSetButtonChange($event.value) name="runeSet" aria-label="Rune Set">
-                <mat-button-toggle value="1">元気</mat-button-toggle>
-                <mat-button-toggle value="2">守護</mat-button-toggle>
-                <mat-button-toggle value="3">迅速</mat-button-toggle>
-            </mat-button-toggle-group>
             <mat-tab-group mat-align-tabs="start" animationDuration="0ms">
-                <mat-tab label="スロット1"><app-table [dataSourceSubject]=subjectManager.unitRecommendedRunes1 [columnFields]=recommendedRuneFields></app-table></mat-tab>
-                <mat-tab label="スロット2"><app-table [dataSourceSubject]=subjectManager.unitRecommendedRunes2 [columnFields]=recommendedRuneFields></app-table></mat-tab>
-                <mat-tab label="スロット3"><app-table [dataSourceSubject]=subjectManager.unitRecommendedRunes3 [columnFields]=recommendedRuneFields></app-table></mat-tab>
-                <mat-tab label="スロット4"><app-table [dataSourceSubject]=subjectManager.unitRecommendedRunes4 [columnFields]=recommendedRuneFields></app-table></mat-tab>
-                <mat-tab label="スロット5"><app-table [dataSourceSubject]=subjectManager.unitRecommendedRunes5 [columnFields]=recommendedRuneFields></app-table></mat-tab>
-                <mat-tab label="スロット6"><app-table [dataSourceSubject]=subjectManager.unitRecommendedRunes6 [columnFields]=recommendedRuneFields></app-table></mat-tab>
+                <ng-container *ngFor="let slot of [1, 2, 3, 4, 5, 6]">
+                    <mat-tab [label]="'スロット' + slot"><ng-container *ngTemplateOutlet="runeTable; context:{$implicit:slot}"></ng-container></mat-tab>
+                </ng-container>
+                <ng-template #runeTable let-slot>
+                    <app-table
+                        [dataSourceSubject]=subjectManager.getRecommendedRunes(slot)
+                        [columnFields]=recommendedRuneFields
+                        [filterFields]=recommentedRuneFilterFields
+                        [pageable]=true
+                    ></app-table>
+                </ng-template>
             </mat-tab-group>
         </mat-card-content>
     </mat-card>
 </div>
+

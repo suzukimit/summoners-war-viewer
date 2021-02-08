@@ -3,7 +3,6 @@ import { AbstractComponent } from 'src/app/common/components/base/abstract.compo
 import { SubjectManager } from 'src/app/common/subject.manager';
 import { Unit } from 'src/app/unit/unit';
 import { MatDialog } from '@angular/material';
-import { UnitDialogComponent } from 'src/app/unit/components/unit-dialog/unit-dialog.component';
 
 @Component({
     selector: 'app-units',
@@ -42,16 +41,6 @@ export class UnitsComponent extends AbstractComponent {
             key: 'unit_level',
         },
     ];
-
-    clickRow(unit: Unit) {
-        const dialogRef = this.dialog.open(UnitDialogComponent, {
-            width: '1440px',
-            data: unit
-        });
-        dialogRef.afterClosed().subscribe(result => {
-            console.log('The dialog was closed');
-        });
-    }
 
     rowRouterLink = (unit: Unit) => `/units/${unit.id}`;
 

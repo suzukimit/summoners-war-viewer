@@ -1,8 +1,7 @@
 import { Component } from '@angular/core';
-import { extra, Rune, runeColumnFields, runeEffectType, runeSet, ScoreRate } from 'src/app/rune/rune';
+import { extra, globalScoreRate, Rune, runeColumnFields, runeEffectType, runeSet } from 'src/app/rune/rune';
 import { SubjectManager } from 'src/app/common/subject.manager';
 import { AbstractComponent } from 'src/app/common/components/base/abstract.component';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { filter } from 'rxjs/operators';
 
 @Component({
@@ -16,19 +15,18 @@ export class RunesComponent extends AbstractComponent {
         super();
     }
     runes: Rune[] = [];
-    scoreRate: ScoreRate = new ScoreRate();
     columnFields = runeColumnFields().concat([
         {
             label: 'スコア',
             key: 'score',
             sortable: true,
-            valueAccessor: (rune: Rune) => { return rune.calcScore(this.scoreRate) },
+            valueAccessor: null,
         },
         {
             label: 'スコア+',
             key: 'potentialScore',
             sortable: true,
-            valueAccessor: (rune: Rune) => { return rune.calcPotentialScore(this.scoreRate) },
+            valueAccessor: null,
         },
         {
             label: 'ユニット',
@@ -117,10 +115,8 @@ export class RunesComponent extends AbstractComponent {
             this.subjectManager.runes.pipe(filter(runes => runes !== null)).subscribe(runes => {
                 this.runes = runes;
             }),
-            this.subjectManager.runesScoreRate.pipe(filter(rate => rate !== null)).subscribe(rate => {
-                this.scoreRate = rate;
-            }),
         );
+        globalScoreRate.init();
     }
 }
 

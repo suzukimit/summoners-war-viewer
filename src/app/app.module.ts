@@ -23,7 +23,6 @@ import { AbstractComponent } from 'src/app/common/components/base/abstract.compo
 import { UnitsComponent } from 'src/app/unit/components/units/units.component';
 import { TableComponent } from './common/components/table/table.component';
 import { ReactiveFormsModule } from '@angular/forms';
-import { UnitDialogComponent } from 'src/app/unit/components/unit-dialog/unit-dialog.component';
 import { ScoreRateFormComponent } from './rune/components/runes/score-rate-form/score-rate-form.component';
 import { UnitComponent } from 'src/app/unit/components/unit/unit.component';
 import { ArtifactsComponent } from 'src/app/artifacts/components/artifacts/artifacts.component';
@@ -34,7 +33,6 @@ import { ArtifactsComponent } from 'src/app/artifacts/components/artifacts/artif
         AbstractComponent,
         RunesComponent,
         UnitsComponent,
-        UnitDialogComponent,
         TableComponent,
         ScoreRateFormComponent,
         UnitComponent,
@@ -65,7 +63,6 @@ import { ArtifactsComponent } from 'src/app/artifacts/components/artifacts/artif
         RuneService
     ],
     entryComponents: [
-        UnitDialogComponent,
     ],
     bootstrap: [AppComponent]
 })
