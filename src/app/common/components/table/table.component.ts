@@ -22,7 +22,7 @@ export class TableComponent<T=any> extends AbstractComponent implements OnInit {
     dataSource: MatTableDataSource<T> = null;
     filterValues = {};
     @Input() tableUpdateKey: string = '';
-    @Input() columnFields: { label: string, key: string, sortable:boolean, valueAccessor: any } [] = [];
+    @Input() columnFields: { label: string, key: string, toolTipKey: string, sortable:boolean, valueAccessor: any } [] = [];
     displayedColumns: string[] = [];
     @Input() filterFields: {
         label: string,
@@ -64,7 +64,7 @@ export class TableComponent<T=any> extends AbstractComponent implements OnInit {
                 .map(key => {
                     const customFunction = this.filterFields.find(field => field.key === key).customFunction;
                     if (customFunction) {
-                        return customFunction;
+                        return customFunction(data, conditions[key]);
                     } else {
                         if (Array.isArray(conditions[key])) {
                             return conditions[key].length === 0 ? true : conditions[key].includes(data[key]);

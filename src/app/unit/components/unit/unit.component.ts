@@ -14,7 +14,7 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class UnitComponent extends AbstractComponent {
 
-    constructor(protected route: ActivatedRoute, protected subjectManager: SubjectManager) {
+    constructor(protected route: ActivatedRoute, public subjectManager: SubjectManager) {
         super();
     }
 
@@ -55,20 +55,7 @@ export class UnitComponent extends AbstractComponent {
             key: 'accuracyView',
         },
     ];
-    runeFields = runeColumnFields(true).concat([
-        {
-            label: 'スコア',
-            key: 'score',
-            sortable: true,
-            valueAccessor: null,
-        },
-        {
-            label: 'スコア+',
-            key: 'potentialScore',
-            sortable: true,
-            valueAccessor: null,
-        }
-    ]);
+    runeFields = runeColumnFields(true);
     recommendedRuneFields = this.runeFields.filter(r => r.key !== 'slot_no');
     recommentedRuneFilterFields = [
         {
@@ -78,46 +65,22 @@ export class UnitComponent extends AbstractComponent {
             options: Object.entries(runeSet).map(e => ({ value: Number(e[0]), viewValue: e[1] })),
         },
         {
-            label: 'メイン',
+            label: 'メイン（2番）',
             key: 'mainType',
             type: 'select',
             options: Object.entries(runeEffectType).map(e => ({ value: Number(e[0]), viewValue: e[1].label })),
         },
         {
-            label: 'サブ1',
-            key: 'sub1Type',
+            label: 'メイン（4番）',
+            key: 'mainType',
             type: 'select',
             options: Object.entries(runeEffectType).map(e => ({ value: Number(e[0]), viewValue: e[1].label })),
-            customFunction: (data: Rune, value): boolean => {
-                return [data.sub1Type, data.sub2Type, data.sub3Type, data.sub4Type].includes(value);
-            },
         },
         {
-            label: 'サブ2',
-            key: 'sub2Type',
+            label: 'メイン（6番）',
+            key: 'mainType',
             type: 'select',
             options: Object.entries(runeEffectType).map(e => ({ value: Number(e[0]), viewValue: e[1].label })),
-            customFunction: (data: Rune, value): boolean => {
-                return [data.sub1Type, data.sub2Type, data.sub3Type, data.sub4Type].includes(value);
-            },
-        },
-        {
-            label: 'サブ3',
-            key: 'sub3Type',
-            type: 'select',
-            options: Object.entries(runeEffectType).map(e => ({ value: Number(e[0]), viewValue: e[1].label })),
-            customFunction: (data: Rune, value): boolean => {
-                return [data.sub1Type, data.sub2Type, data.sub3Type, data.sub4Type].includes(value);
-            },
-        },
-        {
-            label: 'サブ4',
-            key: 'sub4Type',
-            type: 'select',
-            options: Object.entries(runeEffectType).map(e => ({ value: Number(e[0]), viewValue: e[1].label })),
-            customFunction: (data: Rune, value): boolean => {
-                return [data.sub1Type, data.sub2Type, data.sub3Type, data.sub4Type].includes(value);
-            },
         },
         {
             label: '装備可能のみ',
@@ -155,5 +118,12 @@ export class UnitComponent extends AbstractComponent {
         this.subjectManager.unitRecommendedRunes4.next(this.runes.filter(r => r.slot_no === 4).sort((a, b) => b.score - a.score));
         this.subjectManager.unitRecommendedRunes5.next(this.runes.filter(r => r.slot_no === 5).sort((a, b) => b.score - a.score));
         this.subjectManager.unitRecommendedRunes6.next(this.runes.filter(r => r.slot_no === 6).sort((a, b) => b.score - a.score));
+    }
+
+    onConditionChange(condition, value) {
+        // this.filterValues[condition.key] = value;
+        // this.dataSource.filter = JSON.stringify(this.filterValues);
+        console.log(condition);
+        console.log(value);
     }
 }

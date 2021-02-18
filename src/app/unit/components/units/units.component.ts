@@ -11,7 +11,7 @@ import { MatDialog } from '@angular/material';
 })
 export class UnitsComponent extends AbstractComponent {
 
-    constructor(private subjectManager: SubjectManager, public dialog: MatDialog) {
+    constructor(public subjectManager: SubjectManager, public dialog: MatDialog) {
         super();
     }
 

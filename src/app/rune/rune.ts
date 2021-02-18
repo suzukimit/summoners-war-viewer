@@ -33,6 +33,7 @@ export class Rune {
     get prefixType() { return this.prefix_eff[0]; }
     get prefixValue() { return this.prefix_eff[1]; }
     get prefixView() { return this.runeView(this.prefixType, this.prefixValue); }
+    get prefixScore() { return this.calc(this.prefixType, this.prefixValue); }
 
     get sub1Type() { return this.subValue(0, 0); }
     get sub1TypeView() { return this.runeTypeView(this.sub1Type); }
@@ -40,6 +41,7 @@ export class Rune {
     get sub1Value() { return this.sub1OriginalValue + this.subValue(0, 3); }
     get sub1View() { return this.subView(0); }
     get sub1Changed() { return this.subValue(0, 2) === 1; }
+    get sub1Score() { return this.calc(this.sub1Type, this.sub1Value); }
 
     get sub2Type() { return this.subValue(1, 0); }
     get sub2TypeView() { return this.runeTypeView(this.sub2Type); }
@@ -47,6 +49,7 @@ export class Rune {
     get sub2Value() { return this.sub2OriginalValue + this.subValue(1, 3); }
     get sub2View() { return this.subView(1); }
     get sub2Changed() { return this.subValue(1, 2) === 1; }
+    get sub2Score() { return this.calc(this.sub2Type, this.sub2Value); }
 
     get sub3Type() { return this.subValue(2, 0); }
     get sub3TypeView() { return this.runeTypeView(this.sub3Type); }
@@ -54,6 +57,7 @@ export class Rune {
     get sub3Value() { return this.sub3OriginalValue + this.subValue(2, 3); }
     get sub3View() { return this.subView(2); }
     get sub3Changed() { return this.subValue(2, 2) === 1; }
+    get sub3Score() { return this.calc(this.sub3Type, this.sub3Value); }
 
     get sub4Type() { return this.subValue(3, 0); }
     get sub4TypeView() { return this.runeTypeView(this.sub4Type); }
@@ -61,6 +65,7 @@ export class Rune {
     get sub4Value() { return this.sub4OriginalValue + this.subValue(3, 3); }
     get sub4View() { return this.subView(3); }
     get sub4Changed() { return this.subValue(3, 2) === 1; }
+    get sub4Score() { return this.calc(this.sub4Type, this.sub4Value); }
 
     get options() { return [this.mainType, this.prefixType].concat(this.subOptions); }
     get subOptions() { return [this.sub1Type, this.sub2Type, this.sub3Type, this.sub4Type]; }
@@ -133,18 +138,22 @@ export class Rune {
     }
 
     get potentialScore() {
-        return this._calcPotentialScore({});
+        return this.calcPotentialScore({});
     }
 
     get potentialScore2() {
-        return this._calcPotentialScore({ isUseEnhance: true });
+        return this.calcPotentialScore({ isUseEnhance: true });
     }
 
     get potentialScore3() {
-        return this._calcPotentialScore({ isUseEnhance: true, isUseGem: true });
+        return this.calcPotentialScore({ isUseEnhance: true, isUseGem: true });
     }
 
-    private _calcPotentialScore({ isUseEnhance = false, isUseGem = false }) {
+    get scoreToolTip() {
+        return [`${this.sub1Score}(${this.sub1View})`, `${this.sub2Score}(${this.sub2View})`, `${this.sub3Score}(${this.sub3View})`, `${this.sub4Score}(${this.sub4View})`].join(' + ');
+    }
+
+    private calcPotentialScore({ isUseEnhance = false, isUseGem = false }) {
         let result = this.score;
         // 強化段階が12未満
         let enhanceableCount = this.upgrade_curr >= 12 ? 0 : (4 - this.upgrade_curr / 3);
@@ -153,14 +162,15 @@ export class Rune {
         let potentialOptions = [];
         while (enhanceableCount > 0) {
             if (emptySubOptionCount >= enhanceableCount) {
-                result += this.maxValue({ isNewOption: true, potentialOptions: potentialOptions });
+                result += this.maxEnhanceValue({ isNewOption: true, potentialOptions: potentialOptions });
                 emptySubOptionCount--;
             } else {
-                result += this.maxValue({});
+                result += this.maxEnhanceValue({});
             }
             enhanceableCount--;
         }
-        // ジェム・練磨
+        if (isUseEnhance) {
+        }
         if (isUseGem) {
         }
         return result;
@@ -170,7 +180,7 @@ export class Rune {
         return value * globalScoreRate.fromRuneEffectType(type);
     }
 
-    private maxValue({ isNewOption = false, potentialOptions = [] }): number {
+    private maxEnhanceValue({ isNewOption = false, potentialOptions = [] }): number {
         let types = Object.entries(runeEffectType);
         // スロットによって取得できないタイプは除外
         if (this.slot_no === 1) {
@@ -455,111 +465,164 @@ export const runeColumnAllFields = [
     {
         label: 'セット',
         key: 'setView',
+        toolTipKey: '',
         sortable: false,
         valueAccessor: null,
     },
     {
         label: 'スロット',
         key: 'slot_no',
+        toolTipKey: '',
         sortable: false,
         valueAccessor: null,
     },
     {
         label: 'メイン',
         key: 'mainView',
+        toolTipKey: '',
         sortable: false,
         valueAccessor: null,
     },
     {
         label: '接頭',
         key: 'prefixView',
+        toolTipKey: '',
         sortable: false,
         valueAccessor: null,
     },
     {
         label: 'サブ1',
         key: 'sub1View',
+        toolTipKey: '',
         sortable: false,
         valueAccessor: null,
     },
     {
         label: 'サブ1（タイプ）',
         key: 'sub1TypeView',
+        toolTipKey: '',
         sortable: false,
         valueAccessor: null,
     },
     {
         label: 'サブ1（数値）',
         key: 'sub1Value',
+        toolTipKey: '',
         sortable: true,
         valueAccessor: null,
     },
     {
         label: 'サブ2',
         key: 'sub2View',
+        toolTipKey: '',
         sortable: false,
         valueAccessor: null,
     },
     {
         label: 'サブ2（タイプ）',
         key: 'sub2TypeView',
+        toolTipKey: '',
         sortable: false,
         valueAccessor: null,
     },
     {
         label: 'サブ2（数値）',
         key: 'sub2Value',
+        toolTipKey: '',
         sortable: true,
         valueAccessor: null,
     },
     {
         label: 'サブ3',
         key: 'sub3View',
+        toolTipKey: '',
         sortable: false,
         valueAccessor: null,
     },
     {
         label: 'サブ3（タイプ）',
         key: 'sub3TypeView',
+        toolTipKey: '',
         sortable: false,
         valueAccessor: null,
     },
     {
         label: 'サブ3（数値）',
         key: 'sub3Value',
+        toolTipKey: '',
         sortable: true,
         valueAccessor: null,
     },
     {
         label: 'サブ4',
         key: 'sub4View',
+        toolTipKey: '',
         sortable: false,
         valueAccessor: null,
     },
     {
         label: 'サブ4（タイプ）',
         key: 'sub4TypeView',
+        toolTipKey: '',
         sortable: false,
         valueAccessor: null,
     },
     {
         label: 'サブ4（数値）',
         key: 'sub4Value',
+        toolTipKey: '',
         sortable: true,
         valueAccessor: null,
     },
     {
         label: '強化段階',
         key: 'upgrade_curr',
+        toolTipKey: '',
         sortable: false,
         valueAccessor: null,
     },
     {
         label: '純正ランク',
         key: 'extraView',
+        toolTipKey: '',
         sortable: false,
         valueAccessor: null,
     },
+    {
+        label: 'スコア',
+        key: 'score',
+        toolTipKey: 'scoreToolTip',
+        sortable: true,
+        valueAccessor: null,
+    },
+    {
+        label: 'スコア（強化済み）',
+        key: 'potentialScore',
+        toolTipKey: 'potentialScoreToolTip',
+        sortable: true,
+        valueAccessor: null,
+    },
+    {
+        label: 'スコア（練磨）',
+        key: 'potentialScore2',
+        toolTipKey: 'potentialScoreToolTip2',
+        sortable: true,
+        valueAccessor: null,
+    },
+    {
+        label: 'スコア（ジェム・練磨）',
+        key: 'potentialScore3',
+        toolTipKey: 'potentialScoreToolTip3',
+        sortable: true,
+        valueAccessor: null,
+    },
+    {
+        label: 'ユニット',
+        key: 'unitName',
+        toolTipKey: '',
+        sortable: false,
+        valueAccessor: null,
+    }
 ];
 
 export function runeColumnFields(useSimpleSubView: boolean = false, excludeFields: string[] = []) {

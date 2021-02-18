@@ -14,7 +14,7 @@ import {
     MatPaginatorModule,
     MatSelectModule,
     MatSlideToggleModule,
-    MatSortModule, MatTabsModule
+    MatSortModule, MatTabsModule, MatTooltipModule
 } from '@angular/material';
 import { RuneService } from 'src/app/rune/rune.service';
 import { RunesComponent } from 'src/app/rune/components/runes/runes.component';
@@ -57,6 +57,7 @@ import { ArtifactsComponent } from 'src/app/artifacts/components/artifacts/artif
         MatTabsModule,
         MatIconModule,
         MatCardModule,
+        MatTooltipModule,
     ],
     providers: [
         SubjectManager,

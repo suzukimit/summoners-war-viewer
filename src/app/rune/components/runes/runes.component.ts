@@ -11,30 +11,11 @@ import { filter } from 'rxjs/operators';
 })
 export class RunesComponent extends AbstractComponent {
 
-    constructor(protected subjectManager: SubjectManager) {
+    constructor(public subjectManager: SubjectManager) {
         super();
     }
     runes: Rune[] = [];
-    columnFields = runeColumnFields().concat([
-        {
-            label: 'スコア',
-            key: 'score',
-            sortable: true,
-            valueAccessor: null,
-        },
-        {
-            label: 'スコア+',
-            key: 'potentialScore',
-            sortable: true,
-            valueAccessor: null,
-        },
-        {
-            label: 'ユニット',
-            key: 'unitName',
-            sortable: false,
-            valueAccessor: null,
-        }
-    ]);
+    columnFields = runeColumnFields(true);
     filterFields = [
         {
             label: 'セット',
@@ -49,51 +30,24 @@ export class RunesComponent extends AbstractComponent {
             options: [1, 2, 3, 4, 5, 6].map(e => ({ value: e, viewValue: e })),
         },
         {
-            label: 'メイン',
+            label: '主オプション',
             key: 'mainType',
             type: 'select',
             options: Object.entries(runeEffectType).map(e => ({ value: Number(e[0]), viewValue: e[1].label })),
         },
         {
-            label: '接頭語',
+            label: '接頭語オプション',
             key: 'prefixType',
             type: 'select',
             options: Object.entries(runeEffectType).map(e => ({ value: Number(e[0]), viewValue: e[1].label })),
         },
         {
-            label: 'サブ1',
+            label: 'サブオプション',
             key: 'sub1Type',
             type: 'select',
             options: Object.entries(runeEffectType).map(e => ({ value: Number(e[0]), viewValue: e[1].label })),
             customFunction: (data: Rune, value): boolean => {
-                return [data.sub1Type, data.sub2Type, data.sub3Type, data.sub4Type].includes(value);
-            },
-        },
-        {
-            label: 'サブ2',
-            key: 'sub2Type',
-            type: 'select',
-            options: Object.entries(runeEffectType).map(e => ({ value: Number(e[0]), viewValue: e[1].label })),
-            customFunction: (data: Rune, value): boolean => {
-                return [data.sub1Type, data.sub2Type, data.sub3Type, data.sub4Type].includes(value);
-            },
-        },
-        {
-            label: 'サブ3',
-            key: 'sub3Type',
-            type: 'select',
-            options: Object.entries(runeEffectType).map(e => ({ value: Number(e[0]), viewValue: e[1].label })),
-            customFunction: (data: Rune, value): boolean => {
-                return [data.sub1Type, data.sub2Type, data.sub3Type, data.sub4Type].includes(value);
-            },
-        },
-        {
-            label: 'サブ4',
-            key: 'sub4Type',
-            type: 'select',
-            options: Object.entries(runeEffectType).map(e => ({ value: Number(e[0]), viewValue: e[1].label })),
-            customFunction: (data: Rune, value): boolean => {
-                return [data.sub1Type, data.sub2Type, data.sub3Type, data.sub4Type].includes(value);
+                return value.length === 0 || [data.sub1Type, data.sub2Type, data.sub3Type, data.sub4Type].some(e => value.includes(e));
             },
         },
         {
