@@ -38,7 +38,7 @@
             <mat-card-title>おすすめのルーン</mat-card-title>
         </mat-card-header>
         <mat-card-content>
-            <ng-container *ngFor="let field of recommentedRuneFilterFields">
+            <ng-container *ngFor="let field of recommendedRuneFilterFields">
                 <ng-container [ngSwitch]="field.type">
                     <ng-container *ngSwitchCase="'select'">
                         <mat-form-field>

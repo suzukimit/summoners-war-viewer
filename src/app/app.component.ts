@@ -35,6 +35,8 @@ export class AppComponent extends AbstractComponent {
                     ));
                     const unitRunes = units.map(unit => unit.runes.map(rune => Object.assign(rune, { unit: unit })));
                     const runes = e.runes.map(rune => Object.assign(new Rune(), rune));
+                    unitRunes.forEach((runes: Rune[]) => runes.forEach((rune: Rune) => rune.init()));
+                    runes.forEach(rune => rune.init());
                     this.subjectManager.runes.next([].concat(...unitRunes).concat(runes));
                     this.subjectManager.units.next(units.filter(unit => unit.class >= 5 || unit.runes.length > 0));
                 }),

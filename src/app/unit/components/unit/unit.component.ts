@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { AbstractComponent } from 'src/app/common/components/base/abstract.component';
 import { SubjectManager } from 'src/app/common/subject.manager';
-import { globalScoreRate, Rune, runeColumnFields, runeEffectType, runeSet, ScoreRate } from 'src/app/rune/rune';
+import { globalScoreRate, Rune, runeColumnFields, runeEffectType, runeFilterFields, runeSet, ScoreRate } from 'src/app/rune/rune';
 import { filter } from 'rxjs/operators';
 import { Unit } from 'src/app/unit/unit';
 import { combineLatest } from 'rxjs';
@@ -55,40 +55,29 @@ export class UnitComponent extends AbstractComponent {
             key: 'accuracyView',
         },
     ];
-    runeFields = runeColumnFields(true);
-    recommendedRuneFields = this.runeFields.filter(r => r.key !== 'slot_no');
-    recommentedRuneFilterFields = [
-        {
-            label: 'セット',
-            key: 'set_id',
-            type: 'select',
-            options: Object.entries(runeSet).map(e => ({ value: Number(e[0]), viewValue: e[1] })),
-        },
-        {
-            label: 'メイン（2番）',
-            key: 'mainType',
-            type: 'select',
-            options: Object.entries(runeEffectType).map(e => ({ value: Number(e[0]), viewValue: e[1].label })),
-        },
-        {
-            label: 'メイン（4番）',
-            key: 'mainType',
-            type: 'select',
-            options: Object.entries(runeEffectType).map(e => ({ value: Number(e[0]), viewValue: e[1].label })),
-        },
-        {
-            label: 'メイン（6番）',
-            key: 'mainType',
-            type: 'select',
-            options: Object.entries(runeEffectType).map(e => ({ value: Number(e[0]), viewValue: e[1].label })),
-        },
-        {
-            label: '装備可能のみ',
-            key: 'canBeEquipped',
-            type: 'toggle',
-            customFunction: (data: Rune, value: any): boolean => data.unit == null,
-        },
-    ];
+    runeFields = runeColumnFields();
+    recommendedRuneFields = runeColumnFields(['slot_no']);
+    recommendedRuneFilterFields = runeFilterFields({includeFields: ['set_id']})
+        .concat(        {
+                label: 'メイン（2番）',
+                key: 'mainType',
+                type: 'select',
+                options: Object.entries(runeEffectType).filter(e => e[1].label).map(e => ({ value: Number(e[0]), viewValue: e[1].label })),
+            },
+            {
+                label: 'メイン（4番）',
+                key: 'mainType',
+                type: 'select',
+                options: Object.entries(runeEffectType).filter(e => e[1].label).map(e => ({ value: Number(e[0]), viewValue: e[1].label })),
+            },
+            {
+                label: 'メイン（6番）',
+                key: 'mainType',
+                type: 'select',
+                options: Object.entries(runeEffectType).filter(e => e[1].label).map(e => ({ value: Number(e[0]), viewValue: e[1].label })),
+            },
+        )
+        .concat(runeFilterFields({includeFields: ['canBeEquipped']}));
 
     ngOnInit(): void {
         globalScoreRate.init();

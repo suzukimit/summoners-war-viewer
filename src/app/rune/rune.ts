@@ -2,14 +2,49 @@
  * pri_effとかは[effectType, 数値]となっている。
  */
 import { Unit } from 'src/app/unit/unit';
-import { Validators } from '@angular/forms';
+import BigNumber from 'bignumber.js';
+
+export class Option {
+    type: number = 0;
+    value: number = 0;
+    isGemed: boolean = false;
+    trainedValue: number = 0;
+
+    constructor(eff: number[] = [], value: Object = {}) {
+        if (eff && eff.length > 0) {
+            this.type = eff[0] ? eff[0] : 0;
+            this.value = eff[1] ? eff[1] : 0;
+            this.isGemed = eff[2] === 1;
+            this.trainedValue = eff[3] ? eff[3] : 0;
+        } else {
+            Object.assign(this, value);
+        }
+    }
+
+    get isExist(): boolean {
+        return this.type !== 0;
+    }
+    get runeEffectType(): any {
+        return runeEffectType[this.type];
+    }
+    get score(): number {
+        return new BigNumber(this.value + this.trainedValue).multipliedBy(globalScoreRate.fromType(this.type)).dp(2, 1).toNumber()
+    }
+    get runeView(): string {
+        if (this.isExist) {
+            return `${this.runeEffectType.label} ${this.value + this.trainedValue}` + (this.trainedValue > 0 ? ` (+${this.trainedValue})` : '') + (this.isGemed ? '🔃' : '');
+        } else {
+            return '';
+        }
+    }
+}
 
 export class Rune {
     set_id: number;
     slot_no: number;
     pri_eff: number[];  // メインオプション
     prefix_eff: number[];  // 接頭語オプション
-    sec_eff: number[];  // サブオプション
+    sec_eff: number[][];  // サブオプション [type, value, isGemed, trainedValue]のarray
     upgrade_curr: number;
     rune_id: number;
     class: number; // ★の数 古代の場合は15とか16になる？
@@ -18,59 +53,42 @@ export class Rune {
     occupied_type: number; // ?
 
     unit: Unit;
-    get unitName() {
-        return this.unit ? this.unit.name : '';
+
+    init() {
+        this.mainOption = new Option(this.pri_eff);
+        this.prefixOption = new Option(this.prefix_eff);
+        this.sub1Option = new Option(this.sec_eff[0]);
+        this.sub2Option = new Option(this.sec_eff[1]);
+        this.sub3Option = new Option(this.sec_eff[2]);
+        this.sub4Option = new Option(this.sec_eff[3]);
+        this.subOptions.forEach(option => {
+            this.subOptionsByEnhance.push(new Option(null, option));
+            this.subOptionsByEnhanceAndTrain.push(new Option(null, option));
+            this.subOptionsByEnhanceAndTrainAndGem.push(new Option(null, option));
+        });
+        this.calcPotentialScore({});
+        this.calcPotentialScore({ isUseTrain: true });
+        this.calcPotentialScore({ isUseTrain: true, isUseGem: true });
     }
 
-    get setView() {
-        return runeSet[this.set_id];
+    mainOption: Option;
+    prefixOption: Option;
+    sub1Option: Option;
+    sub2Option: Option;
+    sub3Option: Option;
+    sub4Option: Option;
+    subOptionsByEnhance: Option[] = [];
+    subOptionsByEnhanceAndTrain: Option[] = [];
+    subOptionsByEnhanceAndTrainAndGem: Option[] = [];
+
+    get options(): Option[] {
+        return [this.mainOption, this.prefixOption, ...this.subOptions].filter(option => option.isExist);
+    }
+    get subOptions(): Option[] {
+        return [this.sub1Option, this.sub2Option, this.sub3Option, this.sub4Option].filter(option => option.isExist);
     }
 
-    get mainType() { return this.pri_eff[0]; }
-    get mainValue() { return this.pri_eff[1]; }
-    get mainView() { return this.runeView(this.mainType, this.mainValue); }
-
-    get prefixType() { return this.prefix_eff[0]; }
-    get prefixValue() { return this.prefix_eff[1]; }
-    get prefixView() { return this.runeView(this.prefixType, this.prefixValue); }
-    get prefixScore() { return this.calc(this.prefixType, this.prefixValue); }
-
-    get sub1Type() { return this.subValue(0, 0); }
-    get sub1TypeView() { return this.runeTypeView(this.sub1Type); }
-    get sub1OriginalValue() { return this.subValue(0, 1); }
-    get sub1Value() { return this.sub1OriginalValue + this.subValue(0, 3); }
-    get sub1View() { return this.subView(0); }
-    get sub1Changed() { return this.subValue(0, 2) === 1; }
-    get sub1Score() { return this.calc(this.sub1Type, this.sub1Value); }
-
-    get sub2Type() { return this.subValue(1, 0); }
-    get sub2TypeView() { return this.runeTypeView(this.sub2Type); }
-    get sub2OriginalValue() { return this.subValue(1, 1); }
-    get sub2Value() { return this.sub2OriginalValue + this.subValue(1, 3); }
-    get sub2View() { return this.subView(1); }
-    get sub2Changed() { return this.subValue(1, 2) === 1; }
-    get sub2Score() { return this.calc(this.sub2Type, this.sub2Value); }
-
-    get sub3Type() { return this.subValue(2, 0); }
-    get sub3TypeView() { return this.runeTypeView(this.sub3Type); }
-    get sub3OriginalValue() { return this.subValue(2, 1); }
-    get sub3Value() { return this.sub3OriginalValue + this.subValue(2, 3); }
-    get sub3View() { return this.subView(2); }
-    get sub3Changed() { return this.subValue(2, 2) === 1; }
-    get sub3Score() { return this.calc(this.sub3Type, this.sub3Value); }
-
-    get sub4Type() { return this.subValue(3, 0); }
-    get sub4TypeView() { return this.runeTypeView(this.sub4Type); }
-    get sub4OriginalValue() { return this.subValue(3, 1); }
-    get sub4Value() { return this.sub4OriginalValue + this.subValue(3, 3); }
-    get sub4View() { return this.subView(3); }
-    get sub4Changed() { return this.subValue(3, 2) === 1; }
-    get sub4Score() { return this.calc(this.sub4Type, this.sub4Value); }
-
-    get options() { return [this.mainType, this.prefixType].concat(this.subOptions); }
-    get subOptions() { return [this.sub1Type, this.sub2Type, this.sub3Type, this.sub4Type]; }
-
-    get extraView() { return extra[this.extra]; }
+    get enhanceCount() { return this.upgrade_curr / 3; }
 
     get hp() { return this.calcStatus(1) }
     get hpPercent() { return this.calcStatus(2) }
@@ -85,136 +103,132 @@ export class Rune {
     get accuracy() { return this.calcStatus(12) }
     calcStatus(type: number) {
         let value = 0;
-        if (this.mainType === type) { value += this.mainValue; }
-        if (this.prefixType === type) { value += this.prefixValue; }
-        if (this.sub1Type === type) { value += this.sub1Value; }
-        if (this.sub2Type === type) { value += this.sub2Value; }
-        if (this.sub3Type === type) { value += this.sub3Value; }
-        if (this.sub4Type === type) { value += this.sub4Value; }
+        if (this.mainOption.type === type) { value += this.mainOption.value; }
+        if (this.prefixOption.type === type) { value += this.prefixOption.value; }
+        if (this.sub1Option.type === type) { value += this.sub1Option.value; }
+        if (this.sub2Option.type === type) { value += this.sub2Option.value; }
+        if (this.sub3Option.type === type) { value += this.sub3Option.value; }
+        if (this.sub4Option.type === type) { value += this.sub4Option.value; }
         return value;
     }
 
-    subValue(i, j) {
-        if (this.sec_eff[i]) {
-            return this.sec_eff[i][j];
-        } else {
-            return 0;
-        }
-    }
-
-    subView(no: number): string {
-        if (this.sec_eff[no]) {
-            return this.runeView(this.sec_eff[no][0], this.sec_eff[no][1] + this.sec_eff[no][3])
-                + (this.sec_eff[no][2] === 1 ? '🔃' : '');
-        } else {
-            return '';
-        }
-    }
-
-    runeTypeView(type: number): string {
-        if (type === 0) {
-            return '';
-        } else {
-            return runeEffectType[type].label;
-        }
-    }
-
-    runeView(type: number, value: number): string {
-        if (type === 0) {
-            return '';
-        } else {
-            return runeEffectType[type].label + ' ' + value;
-        }
-    }
-
     get score() {
-        let result = 0;
-        result += this.calc(this.prefixType, this.prefixValue);
-        result += this.calc(this.sub1Type, this.sub1Value);
-        result += this.calc(this.sub2Type, this.sub2Value);
-        result += this.calc(this.sub3Type, this.sub3Value);
-        result += this.calc(this.sub4Type, this.sub4Value);
-        return result;
+        return BigNumber.sum(this.prefixOption.score, ...this.subOptions.map(option => option.score)).toNumber();
     }
-
-    get potentialScore() {
-        return this.calcPotentialScore({});
+    get potentialScore1() {
+        return BigNumber.sum(this.prefixOption.score, ...this.subOptionsByEnhance.map(option => option.score)).toNumber();
     }
-
     get potentialScore2() {
-        return this.calcPotentialScore({ isUseEnhance: true });
+        return BigNumber.sum(this.prefixOption.score, ...this.subOptionsByEnhanceAndTrain.map(option => option.score)).toNumber();
     }
-
     get potentialScore3() {
-        return this.calcPotentialScore({ isUseEnhance: true, isUseGem: true });
+        return BigNumber.sum(this.prefixOption.score, ...this.subOptionsByEnhanceAndTrainAndGem.map(option => option.score)).toNumber();
     }
-
     get scoreToolTip() {
-        return [`${this.sub1Score}(${this.sub1View})`, `${this.sub2Score}(${this.sub2View})`, `${this.sub3Score}(${this.sub3View})`, `${this.sub4Score}(${this.sub4View})`].join(' + ');
+        return this.scoreToolTipView(this.subOptions);
+    }
+    get potentialScoreToolTip1() {
+        return this.scoreToolTipView(this.subOptionsByEnhance);
+    }
+    get potentialScoreToolTip2() {
+        return this.scoreToolTipView(this.subOptionsByEnhanceAndTrain);
+    }
+    get potentialScoreToolTip3() {
+        return this.scoreToolTipView(this.subOptionsByEnhanceAndTrainAndGem);
+    }
+    scoreToolTipView(subOptions: Option[]) {
+        return [this.prefixOption, ...subOptions]
+            .filter(option => option.isExist)
+            .map(option => `${option.score}(${option.runeView})`)
+            .join(' + ');
     }
 
-    private calcPotentialScore({ isUseEnhance = false, isUseGem = false }) {
-        let result = this.score;
-        // 強化段階が12未満
+    calc(type, value): number {
+        // とりあえず切り捨てで固定しておく
+        return new BigNumber(value).multipliedBy(globalScoreRate.fromType(type)).dp(2, 1).toNumber()
+    }
+
+    private calcPotentialScore({ isUseTrain = false, isUseGem = false }) {
+        const subOptions = isUseGem ? this.subOptionsByEnhanceAndTrainAndGem : (isUseTrain ? this.subOptionsByEnhanceAndTrain : this.subOptionsByEnhance);
+
         let enhanceableCount = this.upgrade_curr >= 12 ? 0 : (4 - this.upgrade_curr / 3);
-        let emptySubOptionCount = (this.sub1Type === 0 ? 1 : 0) + (this.sub2Type === 0 ? 1 : 0)
-            + (this.sub3Type === 0 ? 1 : 0) + (this.sub4Type === 0 ? 1 : 0);
-        let potentialOptions = [];
+        let emptySubOptionCount = 4 - this.subOptions.length;
         while (enhanceableCount > 0) {
             if (emptySubOptionCount >= enhanceableCount) {
-                result += this.maxEnhanceValue({ isNewOption: true, potentialOptions: potentialOptions });
+                this.enhance(subOptions, { isNewOption: true, isUseTrain: isUseTrain, isUseGem: isUseGem });
                 emptySubOptionCount--;
             } else {
-                result += this.maxEnhanceValue({});
+                this.enhance(subOptions, {});
             }
             enhanceableCount--;
         }
-        if (isUseEnhance) {
+
+        if (isUseTrain) {
+            subOptions.filter(option => option.runeEffectType.trainLegend > option.trainedValue).forEach(option => {
+                option.trainedValue = option.runeEffectType.trainLegend;
+            });
         }
+
         if (isUseGem) {
+            let targetOption = subOptions.find(option => option.isGemed);
+            if (!targetOption) {
+                targetOption = [...subOptions].sort((a, b) => a.score - b.score)[0];
+            }
+
+            const highScoreOption = Object.entries(runeEffectType)
+                .filter(entry => this.slot_no !== 1 || ![5, 6].includes(Number(entry[0])))
+                .filter(entry => this.slot_no !== 3 || ![3, 4].includes(Number(entry[0])))
+                .filter(entry => ![this.mainOption.type, this.prefixOption.type, ...subOptions.map(option => option.type)].includes(Number(entry[0])))
+                .map(type => new Option(null, {
+                    type: Number(type[0]),
+                    value: type[1].gemLegend,
+                    isGemed: true,
+                    trainedValue: type[1].trainLegend,
+                }))
+                .sort((a, b) => b.score - a.score)[0];
+
+            if (targetOption && highScoreOption && (targetOption.score < highScoreOption.score)) {
+                targetOption.type = highScoreOption.type;
+                targetOption.value = highScoreOption.value;
+                targetOption.isGemed = true;
+                targetOption.trainedValue = highScoreOption.trainedValue;
+            }
         }
-        return result;
     }
 
-    private calc(type, value) {
-        return value * globalScoreRate.fromRuneEffectType(type);
-    }
-
-    private maxEnhanceValue({ isNewOption = false, potentialOptions = [] }): number {
-        let types = Object.entries(runeEffectType);
-        // スロットによって取得できないタイプは除外
-        if (this.slot_no === 1) {
-            types = types.filter(type => ![5, 6].includes(Number(type[0])));
-        } else if (this.slot_no === 3) {
-            types = types.filter(type => ![3, 4].includes(Number(type[0])));
-        }
-        // 新しいオプションを追加する場合は取得済みのオプションは除外
+    // TODO maximumGrowの値はclass（星の数）によって異なるのでそこも考慮すべき
+    private enhance(subOptions: Option[], { isNewOption = false, isUseTrain = false, isUseGem = false }) {
         if (isNewOption) {
-            types = types.filter(type => !this.options.includes(Number(type[0])) && !potentialOptions.includes(type[0]));
+            let types = Object.entries(runeEffectType);
+            if (this.slot_no === 1) {
+                //1番スロットは防御+,%を除外
+                types = types.filter(type => ![5, 6].includes(Number(type[0])));
+            } else if (this.slot_no === 3) {
+                //3番スロットは攻撃+,%を除外
+                types = types.filter(type => ![3, 4].includes(Number(type[0])));
+            }
+            types = types.filter(type => ![this.mainOption.type, this.prefixOption.type, ...subOptions.map(option => option.type)].includes(Number(type[0])));
+            const candidateOptions = types.map(type => {
+                return new Option(null, { type: Number(type[0]), value: type[1].maximumGrow });
+            });
+            subOptions.push(candidateOptions.sort(isUseTrain ? this.sortByScoreWithTrainLegend : this.sortByScore)[0]);
         } else {
-            types = types.filter(type => this.subOptions.includes(Number(type[0])));
+            const option = [...subOptions].sort(isUseTrain ? this.sortByScoreWithTrainLegend : this.sortByScore)[0];
+            option.value += option.runeEffectType.maximumGrow;
         }
-        const type = types.sort(this.sortEffectType)[0];
-        if (isNewOption) {
-            potentialOptions.push(type[0]);
-        }
-        return type[1].maximumGrow * type[1].scoreRate;
     }
 
-    sortByScore(scoreRate: ScoreRate) {
-        return (a: Rune, b: Rune) => { return b.score - a.score };
+    sortByScore(a: Option, b: Option) {
+        return b.runeEffectType.maximumGrow * globalScoreRate.fromType(b.type)
+            - a.runeEffectType.maximumGrow * globalScoreRate.fromType(a.type);
     }
-
-    sortEffectType(a, b) {
-        return b[1].maximumGrow * b[1].scoreRate - a[1].maximumGrow * a[1].scoreRate;
+    sortByScoreWithTrainHero(a: Option, b: Option) {
+        return (b.runeEffectType.maximumGrow + b.runeEffectType.trainHero) * globalScoreRate.fromType(b.type)
+            - (a.runeEffectType.maximumGrow + a.runeEffectType.trainHero) * globalScoreRate.fromType(a.type);
     }
-
-    sortEffectTypeWithEnhanceHero(a, b) {
-        return (b[1].maximumGrow + b[1].enhanceHero) * b[1].scoreRate - (a[1].maximumGrow + a[1].enhanceHero) * a[1].scoreRate;
-    }
-
-    sortEffectTypeWithEnhanceLegend(a, b) {
-        return (b[1].maximumGrow + b[1].enhanceLegend) * b[1].scoreRate - (a[1].maximumGrow + a[1].enhanceLegend) * a[1].scoreRate;
+    sortByScoreWithTrainLegend(a: Option, b: Option) {
+        return (b.runeEffectType.maximumGrow + b.runeEffectType.trainLegend) * globalScoreRate.fromType(b.type)
+            - (a.runeEffectType.maximumGrow + a.runeEffectType.trainLegend) * globalScoreRate.fromType(a.type);
     }
 }
 
@@ -230,8 +244,8 @@ export class ScoreRate {
     cliDmg: number = 1.2;
     resist: number = 1;
     accuracy: number = 1;
-    fromRuneEffectType(key: number) {
-        switch (key) {
+    fromType(type: number) {
+        switch (type) {
             case 1: return this.hpFlat;
             case 2: return this.hp;
             case 3: return this.atkFlat;
@@ -321,9 +335,9 @@ export const runeEffectType = {
         gemHero: 0,
         gemLegend: 0,
         gemAncient: 0,
-        enhanceHero: 0,
-        enhanceLegend: 0,
-        enhanceAncient: 0,
+        trainHero: 0,
+        trainLegend: 0,
+        trainAncient: 0,
     },
     1: {
         label: 'HP+',
@@ -332,9 +346,9 @@ export const runeEffectType = {
         gemHero: 420,
         gemLegend: 580,
         gemAncient: 640,
-        enhanceHero: 450,
-        enhanceLegend: 550,
-        enhanceAncient: 610,
+        trainHero: 450,
+        trainLegend: 550,
+        trainAncient: 610,
     },
     2: {
         label: 'HP%',
@@ -343,9 +357,9 @@ export const runeEffectType = {
         gemHero: 11,
         gemLegend: 13,
         gemAncient: 15,
-        enhanceHero: 7,
-        enhanceLegend: 10,
-        enhanceAncient: 12,
+        trainHero: 7,
+        trainLegend: 10,
+        trainAncient: 12,
     },
     3: {
         label: '攻撃力+',
@@ -354,9 +368,9 @@ export const runeEffectType = {
         gemHero: 30,
         gemLegend: 40,
         gemAncient: 44,
-        enhanceHero: 22,
-        enhanceLegend: 30,
-        enhanceAncient: 34,
+        trainHero: 22,
+        trainLegend: 30,
+        trainAncient: 34,
     },
     4: {
         label: '攻撃力%',
@@ -365,9 +379,9 @@ export const runeEffectType = {
         gemHero: 11,
         gemLegend: 13,
         gemAncient: 15,
-        enhanceHero: 7,
-        enhanceLegend: 10,
-        enhanceAncient: 12,
+        trainHero: 7,
+        trainLegend: 10,
+        trainAncient: 12,
     },
     5: {
         label: '防御力+',
@@ -376,9 +390,9 @@ export const runeEffectType = {
         gemHero: 30,
         gemLegend: 40,
         gemAncient: 44,
-        enhanceHero: 22,
-        enhanceLegend: 30,
-        enhanceAncient: 34,
+        trainHero: 22,
+        trainLegend: 30,
+        trainAncient: 34,
     },
     6: {
         label: '防御力%',
@@ -387,9 +401,9 @@ export const runeEffectType = {
         gemHero: 11,
         gemLegend: 13,
         gemAncient: 15,
-        enhanceHero: 7,
-        enhanceLegend: 10,
-        enhanceAncient: 12,
+        trainHero: 7,
+        trainLegend: 10,
+        trainAncient: 12,
     },
     8: {
         label: '速度',
@@ -398,9 +412,9 @@ export const runeEffectType = {
         gemHero: 8,
         gemLegend: 10,
         gemAncient: 11,
-        enhanceHero: 4,
-        enhanceLegend: 5,
-        enhanceAncient: 6,
+        trainHero: 4,
+        trainLegend: 5,
+        trainAncient: 6,
     },
     9: {
         label: 'クリ率',
@@ -409,9 +423,9 @@ export const runeEffectType = {
         gemHero: 7,
         gemLegend: 9,
         gemAncient: 10,
-        enhanceHero: 0,
-        enhanceLegend: 0,
-        enhanceAncient: 0,
+        trainHero: 0,
+        trainLegend: 0,
+        trainAncient: 0,
     },
     10: {
         label: 'クリダメ',
@@ -420,9 +434,9 @@ export const runeEffectType = {
         gemHero: 8,
         gemLegend: 10,
         gemAncient: 12,
-        enhanceHero: 0,
-        enhanceLegend: 0,
-        enhanceAncient: 0,
+        trainHero: 0,
+        trainLegend: 0,
+        trainAncient: 0,
     },
     11: {
         label: '抵抗',
@@ -431,9 +445,9 @@ export const runeEffectType = {
         gemHero: 9,
         gemLegend: 11,
         gemAncient: 13,
-        enhanceHero: 0,
-        enhanceLegend: 0,
-        enhanceAncient: 0,
+        trainHero: 0,
+        trainLegend: 0,
+        trainAncient: 0,
     },
     12: {
         label: '的中',
@@ -442,9 +456,9 @@ export const runeEffectType = {
         gemHero: 9,
         gemLegend: 11,
         gemAncient: 13,
-        enhanceHero: 0,
-        enhanceLegend: 0,
-        enhanceAncient: 0,
+        trainHero: 0,
+        trainLegend: 0,
+        trainAncient: 0,
     },
 };
 
@@ -467,7 +481,7 @@ export const runeColumnAllFields = [
         key: 'setView',
         toolTipKey: '',
         sortable: false,
-        valueAccessor: null,
+        valueAccessor: (rune: Rune) => runeSet[rune.set_id],
     },
     {
         label: 'スロット',
@@ -477,102 +491,59 @@ export const runeColumnAllFields = [
         valueAccessor: null,
     },
     {
-        label: 'メイン',
+        label: '主',
         key: 'mainView',
         toolTipKey: '',
         sortable: false,
-        valueAccessor: null,
+        valueAccessor: (rune: Rune) => rune.mainOption.runeView,
     },
     {
         label: '接頭',
         key: 'prefixView',
         toolTipKey: '',
         sortable: false,
-        valueAccessor: null,
+        valueAccessor: (rune: Rune) => rune.prefixOption.runeView,
     },
     {
         label: 'サブ1',
         key: 'sub1View',
         toolTipKey: '',
         sortable: false,
-        valueAccessor: null,
-    },
-    {
-        label: 'サブ1（タイプ）',
-        key: 'sub1TypeView',
-        toolTipKey: '',
-        sortable: false,
-        valueAccessor: null,
-    },
-    {
-        label: 'サブ1（数値）',
-        key: 'sub1Value',
-        toolTipKey: '',
-        sortable: true,
-        valueAccessor: null,
+        valueAccessor: (rune: Rune) => rune.sub1Option.runeView,
     },
     {
         label: 'サブ2',
         key: 'sub2View',
         toolTipKey: '',
         sortable: false,
-        valueAccessor: null,
-    },
-    {
-        label: 'サブ2（タイプ）',
-        key: 'sub2TypeView',
-        toolTipKey: '',
-        sortable: false,
-        valueAccessor: null,
-    },
-    {
-        label: 'サブ2（数値）',
-        key: 'sub2Value',
-        toolTipKey: '',
-        sortable: true,
-        valueAccessor: null,
+        valueAccessor: (rune: Rune) => rune.sub2Option.runeView,
     },
     {
         label: 'サブ3',
         key: 'sub3View',
         toolTipKey: '',
         sortable: false,
-        valueAccessor: null,
-    },
-    {
-        label: 'サブ3（タイプ）',
-        key: 'sub3TypeView',
-        toolTipKey: '',
-        sortable: false,
-        valueAccessor: null,
-    },
-    {
-        label: 'サブ3（数値）',
-        key: 'sub3Value',
-        toolTipKey: '',
-        sortable: true,
-        valueAccessor: null,
+        valueAccessor: (rune: Rune) => rune.sub3Option.runeView,
     },
     {
         label: 'サブ4',
         key: 'sub4View',
         toolTipKey: '',
         sortable: false,
-        valueAccessor: null,
+        valueAccessor: (rune: Rune) => rune.sub4Option.runeView,
     },
     {
-        label: 'サブ4（タイプ）',
-        key: 'sub4TypeView',
+        label: 'クラス',
+        key: 'class',
         toolTipKey: '',
         sortable: false,
-        valueAccessor: null,
-    },
-    {
-        label: 'サブ4（数値）',
-        key: 'sub4Value',
-        toolTipKey: '',
-        sortable: true,
-        valueAccessor: null,
+        valueAccessor: (rune: Rune) => {
+            let ret = '';
+            for (let i = 0; i < (rune.class % 10); i++) {
+                ret += '☆';
+            }
+            return ret;
+        },
     },
     {
         label: '強化段階',
@@ -586,7 +557,7 @@ export const runeColumnAllFields = [
         key: 'extraView',
         toolTipKey: '',
         sortable: false,
-        valueAccessor: null,
+        valueAccessor: (rune: Rune) => extra[rune.extra],
     },
     {
         label: 'スコア',
@@ -596,21 +567,21 @@ export const runeColumnAllFields = [
         valueAccessor: null,
     },
     {
-        label: 'スコア（強化済み）',
-        key: 'potentialScore',
-        toolTipKey: 'potentialScoreToolTip',
+        label: '最大スコア（強化後）',
+        key: 'potentialScore1',
+        toolTipKey: 'potentialScoreToolTip1',
         sortable: true,
         valueAccessor: null,
     },
     {
-        label: 'スコア（練磨）',
+        label: '最大スコア（強化・練磨後）',
         key: 'potentialScore2',
         toolTipKey: 'potentialScoreToolTip2',
         sortable: true,
         valueAccessor: null,
     },
     {
-        label: 'スコア（ジェム・練磨）',
+        label: '最大スコア（強化・練磨・ジェム後）',
         key: 'potentialScore3',
         toolTipKey: 'potentialScoreToolTip3',
         sortable: true,
@@ -621,16 +592,77 @@ export const runeColumnAllFields = [
         key: 'unitName',
         toolTipKey: '',
         sortable: false,
-        valueAccessor: null,
-    }
+        valueAccessor: (rune: Rune) => rune.unit ? rune.unit.name : '',
+    },
+    // {
+    //     label: 'デバッグ',
+    //     key: 'debag',
+    //     toolTipKey: '',
+    //     sortable: false,
+    //     valueAccessor: (rune: Rune) => rune.sec_eff,
+    // }
 ];
 
-export function runeColumnFields(useSimpleSubView: boolean = false, excludeFields: string[] = []) {
-    let fields = runeColumnAllFields.filter(f => !excludeFields.includes(f.key));
-    if (useSimpleSubView) {
-        fields = fields.filter(f => !['sub1Value', 'sub2Value', 'sub3Value', 'sub4Value', 'sub1TypeView', 'sub2TypeView', 'sub3TypeView', 'sub4TypeView'].includes(f.key));
-    } else {
-        fields = fields.filter(f => !['sub1View', 'sub2View', 'sub3View', 'sub4View'].includes(f.key));
-    }
-    return fields;
+export function runeColumnFields(excludeFields: string[] = []) {
+    return runeColumnAllFields.filter(f => !excludeFields.includes(f.key));
+}
+
+export const runeFilterAllFields = [
+    {
+        label: 'セット',
+        key: 'set_id',
+        type: 'select',
+        options: Object.entries(runeSet).map(e => ({ value: Number(e[0]), viewValue: e[1] })),
+    },
+    {
+        label: 'スロット',
+        key: 'slot_no',
+        type: 'select',
+        options: [1, 2, 3, 4, 5, 6].map(e => ({ value: e, viewValue: e })),
+    },
+    {
+        label: '主オプション',
+        key: 'mainType',
+        type: 'select',
+        options: Object.entries(runeEffectType).filter(e => e[1].label).map(e => ({ value: Number(e[0]), viewValue: e[1].label })),
+        valueAccessor: (rune: Rune) => rune.mainOption.type,
+    },
+    {
+        label: '接頭語オプション',
+        key: 'prefixType',
+        type: 'select',
+        options: Object.entries(runeEffectType).filter(e => e[1].label).map(e => ({ value: Number(e[0]), viewValue: e[1].label })),
+        valueAccessor: (rune: Rune) => rune.prefixOption.type,
+    },
+    {
+        label: 'サブオプション',
+        key: 'subType',
+        type: 'select',
+        options: Object.entries(runeEffectType).filter(e => e[1].label).map(e => ({ value: Number(e[0]), viewValue: e[1].label })),
+        customFunction: (data: Rune, value: []): boolean => {
+            return value.length === 0 || value.every(e => data.subOptions.map(option => option.type).includes(e));
+        },
+    },
+    {
+        label: '純正ランク',
+        key: 'extra',
+        type: 'select',
+        options: Object.entries(extra).map(e => ({ value: Number(e[0]), viewValue: e[1] })),
+    },
+    {
+        label: '強化段階',
+        key: 'enhanceCount',
+        type: 'select',
+        options: [{value: 4, viewValue: '+12~15'}, {value: 3, viewValue: '+9~11'}, {value: 2, viewValue: '+6~8'}, {value: 1, viewValue: '+3~5'}, {value: 0, viewValue: '+0~2'}],
+    },
+    {
+        label: '装備可能のみ',
+        key: 'canBeEquipped',
+        type: 'toggle',
+        customFunction: (data: Rune, value: any): boolean => data.unit == null,
+    },
+];
+
+export function runeFilterFields({includeFields = [], excludeFields = []}) {
+    return runeFilterAllFields.filter(f => (includeFields.length === 0 || includeFields.includes(f.key)) && !excludeFields.includes(f.key));
 }
