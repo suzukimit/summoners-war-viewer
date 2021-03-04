@@ -60,21 +60,33 @@ export class UnitComponent extends AbstractComponent {
     recommendedRuneFilterFields = runeFilterFields({includeFields: ['set_id']})
         .concat(        {
                 label: 'メイン（2番）',
-                key: 'mainType',
+                key: 'mainType2',
                 type: 'select',
-                options: Object.entries(runeEffectType).filter(e => e[1].label).map(e => ({ value: Number(e[0]), viewValue: e[1].label })),
+                options: Object.entries(runeEffectType)
+                    .filter(e => ['HP%', '攻撃力%', '防御力%', '速度'].includes(e[1].label)).map(e => ({ value: Number(e[0]), viewValue: e[1].label })),
+                customFunction: (data: Rune, value: number[]): boolean => {
+                    return value.length === 0 || data.slot_no !== 2 || value.includes(data.mainOption.type);
+                },
             },
             {
                 label: 'メイン（4番）',
-                key: 'mainType',
+                key: 'mainType4',
                 type: 'select',
-                options: Object.entries(runeEffectType).filter(e => e[1].label).map(e => ({ value: Number(e[0]), viewValue: e[1].label })),
+                options: Object.entries(runeEffectType)
+                    .filter(e => ['HP%', '攻撃力%', '防御力%', 'クリ率', 'クリダメ'].includes(e[1].label)).map(e => ({ value: Number(e[0]), viewValue: e[1].label })),
+                customFunction: (data: Rune, value: number[]): boolean => {
+                    return value.length === 0 || data.slot_no !== 4 || value.includes(data.mainOption.type);
+                },
             },
             {
                 label: 'メイン（6番）',
-                key: 'mainType',
+                key: 'mainType6',
                 type: 'select',
-                options: Object.entries(runeEffectType).filter(e => e[1].label).map(e => ({ value: Number(e[0]), viewValue: e[1].label })),
+                options: Object.entries(runeEffectType)
+                    .filter(e => ['HP%', '攻撃力%', '防御力%', '抵抗', '的中'].includes(e[1].label)).map(e => ({ value: Number(e[0]), viewValue: e[1].label })),
+                customFunction: (data: Rune, value: number[]): boolean => {
+                    return value.length === 0 || data.slot_no !== 6 || value.includes(data.mainOption.type);
+                },
             },
         )
         .concat(runeFilterFields({includeFields: ['canBeEquipped']}));
@@ -110,9 +122,6 @@ export class UnitComponent extends AbstractComponent {
     }
 
     onConditionChange(condition, value) {
-        // this.filterValues[condition.key] = value;
-        // this.dataSource.filter = JSON.stringify(this.filterValues);
-        console.log(condition);
-        console.log(value);
+        this.subjectManager.runeCondition.next({condition: condition, value: value});
     }
 }

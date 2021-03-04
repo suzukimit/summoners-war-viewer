@@ -1,4 +1,4 @@
-<div class="coditions">
+<div class="coditions" *ngIf=!conditionValueSubject>
     <ng-container *ngFor="let field of filterFields">
         <ng-container [ngSwitch]="field.type">
             <ng-container *ngSwitchCase="'select'">

@@ -38,6 +38,9 @@ export class TableComponent<T=any> extends AbstractComponent implements OnInit {
     @Output() clickRowEvent = new EventEmitter<T>();
     @Input() rowRouterLink: (row: T) => string = null;
 
+    //外側から条件を指定する場合
+    @Input() conditionValueSubject: BehaviorSubject<T[]> = null;
+
     ngOnInit(): void {
         this.displayedColumns = this.columnFields.map(f => f.key);
         this.initDataSource();
@@ -45,6 +48,13 @@ export class TableComponent<T=any> extends AbstractComponent implements OnInit {
             this.subscriptions.push(
                 this.dataSourceSubject.pipe(filter(data => data !== null)).subscribe((data: T[]) => {
                     this.dataSource.data = data;
+                }),
+            );
+        }
+        if (this.conditionValueSubject) {
+            this.subscriptions.push(
+                this.conditionValueSubject.pipe(filter(data => data !== null)).subscribe((data: any) => {
+                    this.onConditionChange(data.condition, data.value);
                 }),
             );
         }
