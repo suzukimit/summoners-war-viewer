@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { AbstractComponent } from 'src/app/common/components/base/abstract.component';
 import { SubjectManager } from 'src/app/common/subject.manager';
-import { globalScoreRate, Rune, runeColumnFields, runeEffectType, runeFilterFields, runeSet, ScoreRate } from 'src/app/rune/rune';
+import { globalScoreRate, Rune, runeColumnFields, runeEffectType, runeFilterFields, ScoreRate } from 'src/app/rune/rune';
 import { filter } from 'rxjs/operators';
 import { Unit } from 'src/app/unit/unit';
 import { combineLatest } from 'rxjs';

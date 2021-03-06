@@ -136,6 +136,11 @@ export class Rune {
     get potentialScoreToolTip3() {
         return this.scoreToolTipView(this.subOptionsByEnhanceAndTrainAndGem);
     }
+    //ユニット一覧での見せ方
+    get unitScoreView() {
+        return `${this.score}(${this.potentialScore2}, ${this.potentialScore3})`
+    }
+
     scoreToolTipView(subOptions: Option[]) {
         return [this.prefixOption, ...subOptions]
             .filter(option => option.isExist)
@@ -280,27 +285,90 @@ export class ScoreRate {
 export const globalScoreRate = new ScoreRate();
 
 export const runeSet = {
-    1: '元気',
-    2: '守護',
-    3: '迅速',
-    4: '刃',
-    5: '激怒',
-    6: '集中',
-    7: '忍耐',
-    8: '猛攻',
-    10: '絶望',
-    11: '吸血',
-    13: '暴走',
-    14: '果報',
-    15: '意志',
-    16: '保護',
-    17: '反撃',
-    18: '破壊',
-    19: '闘志',
-    20: '決意',
-    21: '高揚',
-    22: '命中',
-    23: '根性'
+    1: {
+        label: '元気',
+        setNumber: 2,
+    },
+    2: {
+        label: '守護',
+        setNumber: 2,
+    },
+    3: {
+        label: '迅速',
+        setNumber: 4,
+    },
+    4: {
+        label: '刃',
+        setNumber: 2,
+    },
+    5: {
+        label: '激怒',
+        setNumber: 4,
+    },
+    6: {
+        label: '集中',
+        setNumber: 2,
+    },
+    7: {
+        label: '忍耐',
+        setNumber: 2,
+    },
+    8: {
+        label: '猛攻',
+        setNumber: 4,
+    },
+    10: {
+        label: '絶望',
+        setNumber: 4,
+    },
+    11: {
+        label: '吸血',
+        setNumber: 4,
+    },
+    13: {
+        label: '暴走',
+        setNumber: 4,
+    },
+    14: {
+        label: '果報',
+        setNumber: 2,
+    },
+    15: {
+        label: '意志',
+        setNumber: 2,
+    },
+    16: {
+        label: '保護',
+        setNumber: 2,
+    },
+    17: {
+        label: '反撃',
+        setNumber: 2,
+    },
+    18: {
+        label: '破壊',
+        setNumber: 2,
+    },
+    19: {
+        label: '闘志',
+        setNumber: 2,
+    },
+    20: {
+        label: '決意',
+        setNumber: 2,
+    },
+    21: {
+        label: '高揚',
+        setNumber: 2,
+    },
+    22: {
+        label: '命中',
+        setNumber: 2,
+    },
+    23: {
+        label: '根性',
+        setNumber: 2,
+    }
 };
 
 export const runeSetEn = {
@@ -481,7 +549,7 @@ export const runeColumnAllFields = [
         key: 'setView',
         toolTipKey: '',
         sortable: false,
-        valueAccessor: (rune: Rune) => runeSet[rune.set_id],
+        valueAccessor: (rune: Rune) => runeSet[rune.set_id].label,
     },
     {
         label: 'スロット',
@@ -612,7 +680,7 @@ export const runeFilterAllFields = [
         label: 'セット',
         key: 'set_id',
         type: 'select',
-        options: Object.entries(runeSet).map(e => ({ value: Number(e[0]), viewValue: e[1] })),
+        options: Object.entries(runeSet).map(e => ({ value: Number(e[0]), viewValue: e[1].label })),
     },
     {
         label: 'スロット',

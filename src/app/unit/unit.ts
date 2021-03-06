@@ -1,4 +1,5 @@
-import { Rune } from 'src/app/rune/rune';
+import { Rune, runeSet } from 'src/app/rune/rune';
+import BigNumber from 'bignumber.js';
 
 export class Unit {
     attribute = 0;  //属性？
@@ -19,8 +20,18 @@ export class Unit {
 
     artifacts = [];
     trans_items = [];   //?
-    runes: Rune[];
-    get applicableRunes() { return ['刃', '暴走'] }
+    runes: Rune[] = [];
+    get applicableRunes() {
+        const ret = [];
+        Object.entries(runeSet).forEach(set => {
+            let count = this.runes.filter(rune => rune.set_id.toString() === set[0]).length;
+            while (count - set[1].setNumber >= 0) {
+                ret.push(set[1].label);
+                count -= set[1].setNumber;
+            }
+        });
+        return ret;
+    }
     skills = [];
     awakening_info = {
         date_add: "",
@@ -33,6 +44,9 @@ export class Unit {
         unit_master_id: 0,
         wizard_id: 0,
     };
+    get runesScoreSum() {
+        return BigNumber.sum(...this.runes.map(rune => rune.score)).toNumber();
+    }
     source = "";    //?
 
     atk = 0;
