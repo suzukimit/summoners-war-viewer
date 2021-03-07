@@ -1,0 +1,29 @@
+@import "../../styles.scss";
+
+header {
+    background-color: mat-color($primary, default);
+    .header {
+        padding-top: 100px;
+        text-align: center;
+        color: white;
+        h1 {
+            font-size: 56px;
+            font-weight: 700;
+        }
+    }
+    .file-import {
+        padding: 50px;
+        .file-import-button {
+            display: flex;
+            justify-content: center;
+        }
+        .file-import-description {
+            text-align: center;
+            color: white;
+            a {
+                color: white;
+            }
+        }
+    }
+}
+
