@@ -4,9 +4,12 @@ import { RunesComponent } from 'src/app/rune/components/runes/runes.component';
 import { UnitsComponent } from 'src/app/unit/components/units/units.component';
 import { UnitComponent } from 'src/app/unit/components/unit/unit.component';
 import { ArtifactsComponent } from 'src/app/artifacts/components/artifacts/artifacts.component';
+import { HomeComponent } from 'src/app/home/home.component';
 
 
 const routes: Routes = [
+    { path: '', redirectTo: '/home', pathMatch: 'full' },
+    { path: 'home', component: HomeComponent },
     { path: 'runes', component: RunesComponent },
     { path: 'artifacts', component: ArtifactsComponent },
     { path: 'units', component: UnitsComponent },

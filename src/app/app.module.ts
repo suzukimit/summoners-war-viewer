@@ -26,6 +26,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { ScoreRateFormComponent } from './rune/components/runes/score-rate-form/score-rate-form.component';
 import { UnitComponent } from 'src/app/unit/components/unit/unit.component';
 import { ArtifactsComponent } from 'src/app/artifacts/components/artifacts/artifacts.component';
+import { HomeComponent } from './home/home.component';
 
 @NgModule({
     declarations: [
@@ -37,6 +38,7 @@ import { ArtifactsComponent } from 'src/app/artifacts/components/artifacts/artif
         ScoreRateFormComponent,
         UnitComponent,
         ArtifactsComponent,
+        HomeComponent,
     ],
     imports: [
         BrowserModule,
