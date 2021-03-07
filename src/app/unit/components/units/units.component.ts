@@ -25,14 +25,6 @@ export class UnitsComponent extends AbstractComponent {
             key: 'attributeName',
         },
         {
-            label: 'unit_master_id',
-            key: 'unit_master_id',
-        },
-        {
-            label: 'unit_id',
-            key: 'unit_id',
-        },
-        {
             label: 'クラス',
             key: 'class',
         },
