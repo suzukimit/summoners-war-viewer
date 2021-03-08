@@ -27,3 +27,25 @@ header {
     }
 }
 
+main {
+    article {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        section.main-section {
+            margin: 50px;
+            display: flex;
+            flex-direction: row;
+            width: 75%;
+            .main-section-row-column{
+                display: flex;
+                flex-direction: column;
+                margin: 0 auto;
+                width: 30%;
+            }
+        }
+        mat-divider {
+            width: 75%;
+        }
+    }
+}

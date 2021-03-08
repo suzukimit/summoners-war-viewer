@@ -9,7 +9,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import {
     MatButtonModule, MatButtonToggleModule, MatCardModule,
-    MatDialogModule, MatIconModule,
+    MatDialogModule, MatDividerModule, MatIconModule,
     MatInputModule,
     MatPaginatorModule,
     MatSelectModule,
@@ -60,6 +60,7 @@ import { HomeComponent } from './home/home.component';
         MatIconModule,
         MatCardModule,
         MatTooltipModule,
+        MatDividerModule,
     ],
     providers: [
         SubjectManager,
