@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { ImportService } from 'src/app/common/components/services/import/import.service';
 
 @Component({
     selector: 'app-home',
@@ -6,13 +7,12 @@ import { Component, OnInit, ViewChild } from '@angular/core';
     styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
-    constructor() { }
+    constructor(public importService: ImportService) { }
 
     ngOnInit() {
     }
 
     @ViewChild('fileInput', {static: true}) fileInput;
-    file: File | null = null;
 
     onClickFileInputButton(): void {
         this.fileInput.nativeElement.click();
@@ -20,5 +20,10 @@ export class HomeComponent implements OnInit {
 
     onChangeFileInput(): void {
         const files: { [key: string]: File } = this.fileInput.nativeElement.files;
-        this.file = files[0];
+        const reader = new FileReader();
+        reader.readAsText(files[0]);
+        reader.onload = (_) => {
+            this.importService.next(JSON.parse(reader.result.toString()));
+            this.importService.fileName = files[0].name;
+        };
     }}

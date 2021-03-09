@@ -3,7 +3,7 @@
         <h1 class="mat-h1">サマナーズウォー管理ツール</h1>
     </div>
     <div class="file-import">
-        <input type="file" style="display: none" #fileInput accept="image/*" (change)="onChangeFileInput()" />
+        <input type="file" style="display: none" #fileInput accept="application/JSON" (change)="onChangeFileInput()" />
         <div class="file-import-button">
             <button mat-raised-button class="file-select-button" (click)="onClickFileInputButton()">
                 <mat-icon>attach_file</mat-icon>
@@ -11,10 +11,10 @@
             </button>
         </div>
         <div class="file-import-description">
-            <p class="file-name" *ngIf="!file; else fileName">ファイルが選択されていません（使い方は<a routerLink="home#usage">こちら</a>を参照）</p>
+            <p class="file-name" *ngIf="!importService.fileName; else fileName">ファイルが選択されていません（使い方は<a routerLink="home#usage">こちら</a>を参照）</p>
         </div>
         <ng-template #fileName>
-            <p class="file-name">{{ file?.name }}</p>
+            <p class="file-name">{{importService.fileName}}をインポート済みです！<a routerLink="/runes">ルーン情報</a>や<a routerLink="/units">モンスター情報</a>を確認できます。</p>
         </ng-template>
     </div>
 </header>
@@ -23,19 +23,16 @@
     <article>
         <section id="whats" class="main-section">
             <div class="main-section-row-column">
-                <h2 class="mat-h2">特徴その1</h2>
-                <p>インポート後、必要なフィールドのみに削り、まとめてローカルストレージに保存（この時点で100KBくらいにしたい）</p>
-                <p>以後、リロードするたびにローカルストレージを読み込むようにする</p>
+                <h2 class="mat-h2">ルーンやモンスターの管理</h2>
+                <p>sw-exporterでエクスポートしたjsonファイルをインポートすることで、ルーン・アーティファクト・モンスターなどのあらゆるゲーム内の情報を閲覧できます。</p>
             </div>
             <div class="main-section-row-column">
-                <h2 class="mat-h2">特徴その2</h2>
-                <p>インポート後、必要なフィールドのみに削り、まとめてローカルストレージに保存（この時点で100KBくらいにしたい）</p>
-                <p>以後、リロードするたびにローカルストレージを読み込むようにする</p>
+                <h2 class="mat-h2">スコアによるルーンの評価</h2>
+                <p>ルーンのスコア付けにより、大量のルーンの中から無駄なルーンや有用なルーンを簡単に検出できます。</p>
             </div>
             <div class="main-section-row-column">
-                <h2 class="mat-h2">特徴その3</h2>
-                <p>インポート後、必要なフィールドのみに削り、まとめてローカルストレージに保存（この時点で100KBくらいにしたい）</p>
-                <p>以後、リロードするたびにローカルストレージを読み込むようにする</p>
+                <h2 class="mat-h2">モンスターのビルド</h2>
+                <p>モンスター毎に最適化されたルーンの組み合わせをサジェストします。</p>
             </div>
         </section>
         <mat-divider></mat-divider>
