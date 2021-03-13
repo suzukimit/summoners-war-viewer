@@ -4,7 +4,7 @@ import { MatPaginator, MatSort } from '@angular/material';
 import { AbstractComponent } from 'src/app/common/components/base/abstract.component';
 import { BehaviorSubject } from 'rxjs';
 import { filter } from 'rxjs/operators';
-import { SubjectManager } from 'src/app/common/subject.manager';
+import { SubjectManager } from 'src/app/common/services/sabject-manager/subject.manager';
 
 @Component({
     selector: 'app-table',

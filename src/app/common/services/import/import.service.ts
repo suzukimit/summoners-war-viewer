@@ -3,7 +3,7 @@ import { map } from 'rxjs/operators';
 import { Unit } from 'src/app/unit/unit';
 import { Rune } from 'src/app/rune/rune';
 import { HttpClient } from '@angular/common/http';
-import { SubjectManager } from 'src/app/common/subject.manager';
+import { SubjectManager } from 'src/app/common/services/sabject-manager/subject.manager';
 import { Observable } from 'rxjs';
 
 @Injectable({

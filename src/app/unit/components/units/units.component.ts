@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { AbstractComponent } from 'src/app/common/components/base/abstract.component';
-import { SubjectManager } from 'src/app/common/subject.manager';
+import { SubjectManager } from 'src/app/common/services/sabject-manager/subject.manager';
 import { Unit } from 'src/app/unit/unit';
 import { MatDialog } from '@angular/material';
 import { filter } from 'rxjs/operators';

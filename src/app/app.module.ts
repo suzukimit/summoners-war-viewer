@@ -18,7 +18,7 @@ import {
 } from '@angular/material';
 import { RuneService } from 'src/app/rune/rune.service';
 import { RunesComponent } from 'src/app/rune/components/runes/runes.component';
-import { SubjectManager } from 'src/app/common/subject.manager';
+import { SubjectManager } from 'src/app/common/services/sabject-manager/subject.manager';
 import { AbstractComponent } from 'src/app/common/components/base/abstract.component';
 import { UnitsComponent } from 'src/app/unit/components/units/units.component';
 import { TableComponent } from './common/components/table/table.component';
@@ -27,6 +27,7 @@ import { ScoreRateFormComponent } from './rune/components/runes/score-rate-form/
 import { UnitComponent } from 'src/app/unit/components/unit/unit.component';
 import { ArtifactsComponent } from 'src/app/artifacts/components/artifacts/artifacts.component';
 import { HomeComponent } from './home/home.component';
+import { ImportComponent } from './common/components/import/import.component';
 
 @NgModule({
     declarations: [
@@ -39,6 +40,7 @@ import { HomeComponent } from './home/home.component';
         UnitComponent,
         ArtifactsComponent,
         HomeComponent,
+        ImportComponent,
     ],
     imports: [
         BrowserModule,

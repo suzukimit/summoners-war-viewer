@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { extra, globalScoreRate, Rune, runeColumnFields, runeFilterFields } from 'src/app/rune/rune';
-import { SubjectManager } from 'src/app/common/subject.manager';
+import { SubjectManager } from 'src/app/common/services/sabject-manager/subject.manager';
 import { AbstractComponent } from 'src/app/common/components/base/abstract.component';
 import { filter } from 'rxjs/operators';
 

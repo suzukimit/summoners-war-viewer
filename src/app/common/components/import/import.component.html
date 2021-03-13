@@ -1,0 +1,15 @@
+<div class="file-import">
+    <input type="file" style="display: none" #fileInput accept="application/JSON" (change)="onChangeFileInput()" />
+    <div class="file-import-button">
+        <button mat-raised-button class="file-select-button" (click)="onClickFileInputButton()">
+            <mat-icon>attach_file</mat-icon>
+            sw-exporterのJSONファイルを選択
+        </button>
+    </div>
+    <div class="file-import-description">
+        <p class="file-name" *ngIf="!importFileName; else fileName">デモデータを使ってみる場合は<span class="use-sample" (click)=useSample()>こちら</span>をクリック</p>
+    </div>
+    <ng-template #fileName>
+        <p class="file-name">{{importFileName}}をインポート済みです！<a routerLink="/runes">ルーン情報</a>や<a routerLink="/units">モンスター情報</a>を確認できます。</p>
+    </ng-template>
+</div>
