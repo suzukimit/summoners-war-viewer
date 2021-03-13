@@ -1,6 +1,11 @@
-<app-table
-    [dataSourceSubject]=subjectManager.units
-    [columnFields]=columnFields
-    [rowRouterLink]=rowRouterLink
-    [pageable]=true
-></app-table>
+<div class="runes" *ngIf="isImportCompleted; else shouldImport">
+    <app-table
+        [dataSourceSubject]=subjectManager.units
+        [columnFields]=columnFields
+        [rowRouterLink]=rowRouterLink
+        [pageable]=true>
+    </app-table>
+</div>
+<ng-template #shouldImport>
+    <p>importしてね</p>
+</ng-template>

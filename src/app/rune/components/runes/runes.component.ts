@@ -17,11 +17,15 @@ export class RunesComponent extends AbstractComponent {
     runes: Rune[] = [];
     columnFields = runeColumnFields();
     filterFields = runeFilterFields({});
+    isImportCompleted = false;
 
     ngOnInit(): void {
         this.subscriptions.push(
             this.subjectManager.runes.pipe(filter(runes => runes !== null)).subscribe(runes => {
                 this.runes = runes;
+            }),
+            this.subjectManager.importFileName.pipe(filter(e => e !== null)).subscribe(_ => {
+                this.isImportCompleted = true;
             }),
         );
         globalScoreRate.init();

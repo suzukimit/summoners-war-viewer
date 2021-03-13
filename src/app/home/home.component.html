@@ -11,10 +11,10 @@
             </button>
         </div>
         <div class="file-import-description">
-            <p class="file-name" *ngIf="!importService.fileName; else fileName">ファイルが選択されていません（使い方は<a routerLink="home#usage">こちら</a>を参照）</p>
+            <p class="file-name" *ngIf="!importFileName; else fileName">デモデータを使ってみる場合は<span class="use-sample" (click)=useSample()>こちら</span>をクリック</p>
         </div>
         <ng-template #fileName>
-            <p class="file-name">{{importService.fileName}}をインポート済みです！<a routerLink="/runes">ルーン情報</a>や<a routerLink="/units">モンスター情報</a>を確認できます。</p>
+            <p class="file-name">{{importFileName}}をインポート済みです！<a routerLink="/runes">ルーン情報</a>や<a routerLink="/units">モンスター情報</a>を確認できます。</p>
         </ng-template>
     </div>
 </header>

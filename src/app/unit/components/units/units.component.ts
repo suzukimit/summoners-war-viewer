@@ -3,6 +3,7 @@ import { AbstractComponent } from 'src/app/common/components/base/abstract.compo
 import { SubjectManager } from 'src/app/common/subject.manager';
 import { Unit } from 'src/app/unit/unit';
 import { MatDialog } from '@angular/material';
+import { filter } from 'rxjs/operators';
 
 @Component({
     selector: 'app-units',
@@ -74,10 +75,16 @@ export class UnitsComponent extends AbstractComponent {
             valueAccessor: (unit: Unit) => unit.runesScoreSum,
         },
     ];
+    isImportCompleted = false;
 
     rowRouterLink = (unit: Unit) => `/units/${unit.id}`;
 
     ngOnInit(): void {
+        this.subscriptions.push(
+            this.subjectManager.importFileName.pipe(filter(e => e !== null)).subscribe(_ => {
+                this.isImportCompleted = true;
+            }),
+        );
     }
 }
 

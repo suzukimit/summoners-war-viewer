@@ -1,7 +1,12 @@
-<app-table
-    [dataSourceSubject]=subjectManager.runes
-    [columnFields]=columnFields
-    [filterFields]=filterFields
-    [pageable]=true
-></app-table>
-<app-score-rate-form></app-score-rate-form>
+<div class="runes" *ngIf="isImportCompleted; else shouldImport">
+    <app-table
+        [dataSourceSubject]=subjectManager.runes
+        [columnFields]=columnFields
+        [filterFields]=filterFields
+        [pageable]=true
+    ></app-table>
+    <app-score-rate-form></app-score-rate-form>
+</div>
+<ng-template #shouldImport>
+    <p>importしてね</p>
+</ng-template>

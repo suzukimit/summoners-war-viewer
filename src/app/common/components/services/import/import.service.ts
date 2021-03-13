@@ -12,8 +12,7 @@ import { Observable } from 'rxjs';
 export class ImportService {
 
   constructor(private http: HttpClient, private subjectManager: SubjectManager) { }
-  sample = 'assets/sample.json';
-  fileName = '';
+  sample = 'assets/demo.json';
 
   importSample(): Observable<any> {
       return this.http.get(this.sample);
