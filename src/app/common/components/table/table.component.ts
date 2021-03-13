@@ -80,7 +80,7 @@ export class TableComponent<T=any> extends AbstractComponent implements OnInit {
                         return customFunction(data, conditions[key]);
                     } else {
                         if (Array.isArray(conditions[key])) {
-                            return conditions[key].length === 0 ? true : conditions[key].includes(value);
+                            return conditions[key].length === 0 || conditions[key].includes(value);
                         } else {
                             return value === conditions[key];
                         }

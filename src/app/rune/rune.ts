@@ -680,7 +680,19 @@ export const runeFilterAllFields = [
         label: 'セット',
         key: 'set_id',
         type: 'select',
-        options: Object.entries(runeSet).map(e => ({ value: Number(e[0]), viewValue: e[1].label })),
+        options: Object.entries(runeSet).map(e => ({ value: Number(e[0]), viewValue: e[1].label })).concat([
+            { value: -1, viewValue: '2セットルーン' },
+            { value: -2, viewValue: '4セットルーン' },
+        ]),
+        customFunction: (data: Rune, value: number[]): boolean => {
+            if (value.includes(-1)) {
+                value.push(1, 2, 4, 6, 7, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23);
+            }
+            if (value.includes(-2)) {
+                value.push(3, 5, 8, 10, 11, 13);
+            }
+            return value.length === 0 || value.includes(data.set_id);
+        },
     },
     {
         label: 'スロット',
