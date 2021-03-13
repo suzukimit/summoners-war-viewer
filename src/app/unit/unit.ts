@@ -3043,6 +3043,612 @@ export const monster_names = {
         ja: "",
     },
 
+    "221": {
+        en: "Dryad",
+        ja: "",
+    },
+    "22111": {
+        en: "Herne",
+        ja: "",
+    },
+    "22112": {
+        en: "Nisha",
+        ja: "",
+    },
+    "22113": {
+        en: "Mellia",
+        ja: "",
+    },
+    "22114": {
+        en: "Felleria",
+        ja: "",
+    },
+    "22115": {
+        en: "Hyanes",
+        ja: "",
+    },
+
+    "222": {
+        en: "Druid",
+        ja: "",
+    },
+    "22211": {
+        en: "Abellio",
+        ja: "",
+    },
+    "22212": {
+        en: "Bellenus",
+        ja: "",
+    },
+    "22213": {
+        en: "Taranys",
+        ja: "",
+    },
+    "22214": {
+        en: "Valantis",
+        ja: "",
+    },
+    "22215": {
+        en: "Pater",
+        ja: "",
+    },
+    "22311": {
+        en: "Abellio",
+        ja: "",
+    },
+    "22312": {
+        en: "Bellenus",
+        ja: "",
+    },
+    "22313": {
+        en: "Taranys",
+        ja: "",
+    },
+    "22314": {
+        en: "Valantis",
+        ja: "",
+    },
+    "22315": {
+        en: "Pater",
+        ja: "",
+    },
+
+    "224": {
+        en: "Giant Warrior",
+        ja: "",
+    },
+    "22411": {
+        en: "Bagir",
+        ja: "",
+    },
+    "22412": {
+        en: "Vidurr",
+        ja: "",
+    },
+    "22413": {
+        en: "Skogul",
+        ja: "",
+    },
+    "22414": {
+        en: "Einheri",
+        ja: "",
+    },
+    "22415": {
+        en: "Trasar",
+        ja: "",
+    },
+    "22513": {
+        en: "Skogul",
+        ja: "",
+    },
+    "22515": {
+        en: "Trasar",
+        ja: "",
+    },
+
+    "226": {
+        en: "Lightning Emperor",
+        ja: "",
+    },
+    "22611": {
+        en: "Bolverk",
+        ja: "",
+    },
+    "22612": {
+        en: "Baleygr",
+        ja: "",
+    },
+    "22613": {
+        en: "Odin",
+        ja: "",
+    },
+    "22614": {
+        en: "Geldnir",
+        ja: "",
+    },
+    "22615": {
+        en: "Herteit",
+        ja: "",
+    },
+
+    "227": {
+        en: "Sniper Mk.I",
+        ja: "",
+    },
+    "22711": {
+        en: "Covenant",
+        ja: "",
+    },
+    "22712": {
+        en: "Carcano",
+        ja: "",
+    },
+    "22713": {
+        en: "Carbine",
+        ja: "",
+    },
+    "22714": {
+        en: "Magnum",
+        ja: "",
+    },
+    "22715": {
+        en: "Dragunov",
+        ja: "",
+    },
+
+    "228": {
+        en: "Sniper Mk.I",
+        ja: "",
+    },
+    "22812": {
+        en: "Carcano",
+        ja: "",
+    },
+    "22813": {
+        en: "Carbine",
+        ja: "",
+    },
+    "22815": {
+        en: "Dragunov",
+        ja: "",
+    },
+
+    "229": {
+        en: "Cannon Girl",
+        ja: "",
+    },
+    "22911": {
+        en: "Abigail",
+        ja: "",
+    },
+    "22912": {
+        en: "Scarlett",
+        ja: "",
+    },
+    "22913": {
+        en: "Christina",
+        ja: "",
+    },
+    "22914": {
+        en: "Emily",
+        ja: "",
+    },
+    "22915": {
+        en: "Bella",
+        ja: "",
+    },
+
+    "23005": {
+        en: "Vampire Lord",
+        ja: "",
+    },
+    "23015": {
+        en: "Eirgar",
+        ja: "",
+    },
+
+    "231": {
+        en: "Demon",
+        ja: "",
+    },
+    "23111": {
+        en: "Belial",
+        ja: "",
+    },
+    "23112": {
+        en: "Bael",
+        ja: "",
+    },
+    "23113": {
+        en: "Mephisto",
+        ja: "",
+    },
+    "23114": {
+        en: "Lucifer",
+        ja: "",
+    },
+    "23115": {
+        en: "Beelzebub",
+        ja: "",
+    },
+
+    "232": {
+        en: "Demon",
+        ja: "",
+    },
+    "23211": {
+        en: "Belial",
+        ja: "",
+    },
+    "23215": {
+        en: "Beelzebub",
+        ja: "",
+    },
+
+    "233": {
+        en: "Gargoyle",
+        ja: "",
+    },
+    "23311": {
+        en: "Tanzaite",
+        ja: "",
+    },
+    "23312": {
+        en: "Kunite",
+        ja: "",
+    },
+    "23313": {
+        en: "Malite",
+        ja: "",
+    },
+    "23314": {
+        en: "Pheneka",
+        ja: "",
+    },
+    "23315": {
+        en: "Onyx",
+        ja: "",
+    },
+
+    "234": {
+        en: "Gargoyle",
+        ja: "",
+    },
+    "23411": {
+        en: "Tanzaite",
+        ja: "",
+    },
+    "23412": {
+        en: "Kunite",
+        ja: "",
+    },
+    "23413": {
+        en: "Malite",
+        ja: "",
+    },
+    "23414": {
+        en: "Pheneka",
+        ja: "",
+    },
+    "23415": {
+        en: "Onyx",
+        ja: "",
+    },
+
+    "235": {
+        en: "Beast Rider",
+        ja: "",
+    },
+    "23511": {
+        en: "Barbara",
+        ja: "",
+    },
+    "23512": {
+        en: "Masha",
+        ja: "",
+    },
+    "23513": {
+        en: "Savannah",
+        ja: "",
+    },
+    "23514": {
+        en: "Narsha",
+        ja: "",
+    },
+    "23515": {
+        en: "Xiana",
+        ja: "",
+    },
+
+    "236": {
+        en: "Beast Rider",
+        ja: "",
+    },
+    "23611": {
+        en: "Barbara",
+        ja: "",
+    },
+    "23612": {
+        en: "Masha",
+        ja: "",
+    },
+    "23613": {
+        en: "Savannah",
+        ja: "",
+    },
+    "23614": {
+        en: "Narsha",
+        ja: "",
+    },
+    "23615": {
+        en: "Xiana",
+        ja: "",
+    },
+
+    "237": {
+        en: "Art Master",
+        ja: "",
+    },
+    "23711": {
+        en: "Haegang",
+        ja: "",
+    },
+    "23712": {
+        en: "Jeogun",
+        ja: "",
+    },
+    "23713": {
+        en: "Cheongpung",
+        ja: "",
+    },
+    "23714": {
+        en: "Hanwul",
+        ja: "",
+    },
+    "23715": {
+        en: "Mookwol",
+        ja: "",
+    },
+
+    "239": {
+        en: "String Master",
+        ja: "",
+    },
+    "23911": {
+        en: "Songseol",
+        ja: "",
+    },
+    "23912": {
+        en: "Hongyeon",
+        ja: "",
+    },
+    "23913": {
+        en: "Yeonhwa",
+        ja: "",
+    },
+    "23914": {
+        en: "Dongbaek",
+        ja: "",
+    },
+    "23915": {
+        en: "Mirinae",
+        ja: "",
+    },
+
+    "240": {
+        en: "RYU",
+        ja: "",
+    },
+    "24011": {
+        en: "RYU",
+        ja: "",
+    },
+    "24012": {
+        en: "RYU",
+        ja: "",
+    },
+    "24013": {
+        en: "RYU",
+        ja: "",
+    },
+    "24014": {
+        en: "RYU",
+        ja: "",
+    },
+    "24015": {
+        en: "RYU",
+        ja: "",
+    },
+
+    "24112": {
+        en: "KEN",
+        ja: "",
+    },
+
+    "242": {
+        en: "M. BISON",
+        ja: "",
+    },
+    "24211": {
+        en: "M. BISON",
+        ja: "",
+    },
+    "24212": {
+        en: "M. BISON",
+        ja: "",
+    },
+    "24213": {
+        en: "M. BISON",
+        ja: "",
+    },
+    "24214": {
+        en: "M. BISON",
+        ja: "",
+    },
+    "24215": {
+        en: "M. BISON",
+        ja: "",
+    },
+
+    "243": {
+        en: "DHALSIM",
+        ja: "",
+    },
+    "24311": {
+        en: "DHALSIM",
+        ja: "",
+    },
+    "24312": {
+        en: "DHALSIM",
+        ja: "",
+    },
+    "24313": {
+        en: "DHALSIM",
+        ja: "",
+    },
+    "24314": {
+        en: "DHALSIM",
+        ja: "",
+    },
+    "24315": {
+        en: "DHALSIM",
+        ja: "",
+    },
+
+    "244": {
+        en: "CHUN-LI",
+        ja: "",
+    },
+    "24411": {
+        en: "CHUN-LI",
+        ja: "",
+    },
+    "24412": {
+        en: "CHUN-LI",
+        ja: "",
+    },
+    "24413": {
+        en: "CHUN-LI",
+        ja: "",
+    },
+    "24414": {
+        en: "CHUN-LI",
+        ja: "",
+    },
+    "24415": {
+        en: "CHUN-LI",
+        ja: "",
+    },
+
+    "245": {
+        en: "Striker",
+        ja: "",
+    },
+    "24511": {
+        en: "Moore",
+        ja: "",
+    },
+    "24512": {
+        en: "Douglas",
+        ja: "",
+    },
+    "24513": {
+        en: "Kashmir",
+        ja: "",
+    },
+    "24514": {
+        en: "Talisman",
+        ja: "",
+    },
+    "24515": {
+        en: "Vancliffe",
+        ja: "",
+    },
+
+    "246": {
+        en: "Shadow Claw",
+        ja: "",
+    },
+    "24612": {
+        en: "Bernadotte",
+        ja: "",
+    },
+
+    "247": {
+        en: "Slayer",
+        ja: "",
+    },
+    "24711": {
+        en: "Borgnine",
+        ja: "",
+    },
+    "24712": {
+        en: "Karnal",
+        ja: "",
+    },
+    "24713": {
+        en: "Sagar",
+        ja: "",
+    },
+    "24714": {
+        en: "Craig",
+        ja: "",
+    },
+    "24715": {
+        en: "Gurkha",
+        ja: "",
+    },
+
+    "248": {
+        en: "Poison Master",
+        ja: "",
+    },
+    "24811": {
+        en: "Kyle",
+        ja: "",
+    },
+    "24812": {
+        en: "Todd",
+        ja: "",
+    },
+    "24813": {
+        en: "Jarrett",
+        ja: "",
+    },
+    "24814": {
+        en: "Hekerson",
+        ja: "",
+    },
+    "24815": {
+        en: "Cayde",
+        ja: "",
+    },
+
+    "249": {
+        en: "Blade Dancer",
+        ja: "",
+    },
+    "24911": {
+        en: "Lariel",
+        ja: "",
+    },
+    "24912": {
+        en: "Berenice",
+        ja: "",
+    },
+    "24913": {
+        en: "Cordelia",
+        ja: "",
+    },
+    "24914": {
+        en: "Leah",
+        ja: "",
+    },
+    "24915": {
+        en: "Vereesa",
+        ja: "",
+    },
+
     "15105": {
         en: "Devilmon",
         ja: "",
