@@ -3680,3 +3680,91 @@ export const monster_names = {
         ja: "",
     },
 };
+
+export const unitColumnAllFields = [
+    {
+        label: '名前',
+        key: 'name',
+    },
+    {
+        label: '属性',
+        key: 'attributeName',
+    },
+    {
+        label: 'クラス',
+        key: 'class',
+    },
+    {
+        label: 'レベル',
+        key: 'unit_level',
+    },
+    {
+        label: '発動ルーン',
+        key: 'runeSet',
+        valueAccessor: (unit: Unit) => unit.applicableRunes,
+    },
+    {
+        label: 'ルーン1',
+        key: 'rune1',
+        valueAccessor: (unit: Unit) => unit.runes[0] ? unit.runes[0].unitScoreView : '',
+    },
+    {
+        label: 'ルーン2',
+        key: 'rune2',
+        valueAccessor: (unit: Unit) => unit.runes[1] ? unit.runes[1].unitScoreView : '',
+    },
+    {
+        label: 'ルーン3',
+        key: 'rune3',
+        valueAccessor: (unit: Unit) => unit.runes[2] ? unit.runes[2].unitScoreView : '',
+    },
+    {
+        label: 'ルーン4',
+        key: 'rune4',
+        valueAccessor: (unit: Unit) => unit.runes[3] ? unit.runes[3].unitScoreView : '',
+    },
+    {
+        label: 'ルーン5',
+        key: 'rune5',
+        valueAccessor: (unit: Unit) => unit.runes[4] ? unit.runes[4].unitScoreView : '',
+    },
+    {
+        label: 'ルーン6',
+        key: 'rune6',
+        valueAccessor: (unit: Unit) => unit.runes[5] ? unit.runes[5].unitScoreView : '',
+    },
+    {
+        label: 'スコア合計',
+        key: 'runesScoreSum',
+        sortable: true,
+        valueAccessor: (unit: Unit) => unit.runesScoreSum,
+    },
+];
+
+export function unitColumnFields(excludeFields: string[] = []) {
+    return unitColumnAllFields.filter(f => !excludeFields.includes(f.key));
+}
+
+export const unitFilterAllFields = [
+    {
+        label: '名前',
+        key: 'name',
+        type: 'text',
+    },
+    {
+        label: '属性',
+        key: 'attribute',
+        type: 'select',
+        options: Object.entries(attribute).map(e => ({ value: Number(e[0]), viewValue: e[1] })),
+    },
+    {
+        label: 'クラス',
+        key: 'class',
+        type: 'select',
+        options: [1, 2, 3, 4, 5, 6].map(e => ({ value: e, viewValue: e })),
+    },
+];
+
+export function unitFilterFields({includeFields = [], excludeFields = []}) {
+    return unitFilterAllFields.filter(f => (includeFields.length === 0 || includeFields.includes(f.key)) && !excludeFields.includes(f.key));
+}

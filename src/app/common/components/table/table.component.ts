@@ -73,14 +73,15 @@ export class TableComponent<T=any> extends AbstractComponent implements OnInit {
             return Object.keys(conditions)
                 .filter(key => conditions[key])
                 .map(key => {
-                    const customFunction = this.filterFields.find(field => field.key === key).customFunction;
-                    const valueAccessor = this.filterFields.find(field => field.key === key).valueAccessor;
-                    const value = valueAccessor ? valueAccessor(data) : data[key];
-                    if (customFunction) {
-                        return customFunction(data, conditions[key]);
+                    const field = this.filterFields.find(field => field.key === key);
+                    const value = field.valueAccessor ? field.valueAccessor(data) : data[key];
+                    if (field.customFunction) {
+                        return field.customFunction(data, conditions[key]);
                     } else {
                         if (Array.isArray(conditions[key])) {
                             return conditions[key].length === 0 || conditions[key].includes(value);
+                        } else if (field.type === 'text') {
+                            return value.toLowerCase().includes(conditions[key].toLowerCase());
                         } else {
                             return value === conditions[key];
                         }
