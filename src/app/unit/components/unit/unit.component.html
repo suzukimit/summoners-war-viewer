@@ -2,29 +2,37 @@
     <div class="unit-name">
         <h1>{{unit.name}}</h1>
     </div>
-    <mat-card class="status-card">
-        <mat-card-header>
-            <mat-card-title>ステータス</mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-            <app-table
-                [data]="[unit]"
-                [columnFields]=unitFields
-            ></app-table>
-            <span class="mat-body">発動中のルーン: {{unit.applicableRunes.toString()}}</span>
-        </mat-card-content>
-    </mat-card>
-    <mat-card class="runes-card">
-        <mat-card-header>
-            <mat-card-title>装備中のルーン</mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-            <app-table
-                [data]="unit.runes"
-                [columnFields]=runeFields
-            ></app-table>
-        </mat-card-content>
-    </mat-card>
+    <ng-template #status let-title="title" let-data="unit">
+        <mat-card class="status-card">
+            <mat-card-header>
+                <mat-card-title>{{title}}</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                <app-table
+                    [data]="[data]"
+                    [columnFields]=unitFields
+                ></app-table>
+                <span class="mat-body">発動中のルーン: {{data.applicableRunes.toString()}}</span>
+            </mat-card-content>
+        </mat-card>
+    </ng-template>
+    <ng-container *ngTemplateOutlet="status; context:{title:'ステータス', unit: unit}"></ng-container>
+    <ng-container *ngTemplateOutlet="status; context:{title:'ステータス（変更後）', unit: unitBuilding}"></ng-container>
+    <ng-template #equipment let-title="title" let-data="unit">
+        <mat-card class="runes-card">
+            <mat-card-header>
+                <mat-card-title>{{title}}</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                <app-table
+                    [data]="data.runes"
+                    [columnFields]=runeFields
+                ></app-table>
+            </mat-card-content>
+        </mat-card>
+    </ng-template>
+    <ng-container *ngTemplateOutlet="equipment; context:{title:'装備中のルーン', unit: unit}"></ng-container>
+    <ng-container *ngTemplateOutlet="equipment; context:{title:'装備中のルーン（変更後）', unit: unitBuilding}"></ng-container>
     <mat-card class="score-rate-card">
         <mat-card-header>
             <mat-card-title>スコア指数</mat-card-title>

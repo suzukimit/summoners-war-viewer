@@ -6,6 +6,7 @@ import { filter } from 'rxjs/operators';
 import { Unit } from 'src/app/unit/unit';
 import { combineLatest } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
+import * as _ from 'lodash';
 
 @Component({
     selector: 'app-unit',
@@ -19,6 +20,7 @@ export class UnitComponent extends AbstractComponent {
     }
 
     unit: Unit = null;
+    unitBuilding: Unit = null;
     runes: Rune[] = [];
 
     unitFields = [
@@ -98,6 +100,7 @@ export class UnitComponent extends AbstractComponent {
                 filter(([params, units, runes]) => units !== null && runes !== null)
             ).subscribe(([params, units, runes]) => {
                 this.unit = units.find(u => u.id === params.id);
+                this.unitBuilding = _.cloneDeep(this.unit);
                 if (localStorage.getItem(this.unit.id)) {
                     globalScoreRate.copyFrom(Object.assign(new ScoreRate(), JSON.parse(localStorage.getItem(this.unit.id))));
                 }
@@ -126,6 +129,12 @@ export class UnitComponent extends AbstractComponent {
     }
 
     onClickrecommendedRuneRow(e: {row: Rune, i: number}) {
-        console.log(e);
+        const i = this.unitBuilding.runes.findIndex(rune => rune.slot_no === e.row.slot_no);
+        if (i) {
+            this.unitBuilding.runes.splice(i, 1, e.row);
+        } else {
+            this.unitBuilding.runes.push(e.row);
+            this.unitBuilding.runes.sort((a, b) => { return a.slot_no - b.slot_no });
+        }
     }
 }
