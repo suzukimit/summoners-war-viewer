@@ -35,8 +35,10 @@ export class TableComponent<T=any> extends AbstractComponent implements OnInit {
     @Input() pageable: boolean = false;
     @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
     @ViewChild(MatSort, {static: true}) sort: MatSort;
-    @Output() clickRowEvent = new EventEmitter<T>();
+    @Output() clickRowEvent = new EventEmitter<{row: T, i: number}>();
     @Input() rowRouterLink: (row: T) => string = null;
+    @Input() rowSelectable: boolean = false;
+    selected: number = -1;
 
     //外側から条件を指定する場合
     @Input() conditionValueSubject: BehaviorSubject<T[]> = null;
@@ -102,7 +104,12 @@ export class TableComponent<T=any> extends AbstractComponent implements OnInit {
         this.dataSource.filter = '';
     }
 
-    onClickRow(row: T) {
-        this.clickRowEvent.emit(row);
+    onClickRow(row: T, i: number) {
+        this.clickRowEvent.emit({row: row, i: i});
+        if (this.rowSelectable && this.selected !== i) {
+            this.selected = i;
+        } else {
+            this.selected = -1;
+        }
     }
 }

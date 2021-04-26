@@ -1,3 +1,5 @@
+@import "../../../../styles.scss";
+
 table {
     width: 100%;
     tr {
@@ -6,5 +8,8 @@ table {
             line-height: 48px;
             text-decoration: none;
         }
+    }
+    .highlight {
+        background: mat-color($primary, lighter);
     }
 }

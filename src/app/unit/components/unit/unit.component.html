@@ -68,6 +68,8 @@
                         [columnFields]=recommendedRuneFields
                         [filterFields]=recommendedRuneFilterFields
                         [conditionValueSubject]=subjectManager.runeCondition
+                        (clickRowEvent)="onClickrecommendedRuneRow($event)"
+                        [rowSelectable]=true
                         [pageable]=true
                     ></app-table>
                 </ng-template>

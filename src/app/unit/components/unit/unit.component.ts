@@ -124,4 +124,8 @@ export class UnitComponent extends AbstractComponent {
     onConditionChange(condition, value) {
         this.subjectManager.runeCondition.next({condition: condition, value: value});
     }
+
+    onClickrecommendedRuneRow(e: {row: Rune, i: number}) {
+        console.log(e);
+    }
 }

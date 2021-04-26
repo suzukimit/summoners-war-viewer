@@ -39,7 +39,7 @@
         </ng-container>
     </div>
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="onClickRow(row)"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns; let i = index;" (click)="onClickRow(row, i)" [ngClass]="{'highlight': selected == i}"></tr>
 </table>
 
 <div [hidden]=!pageable>
