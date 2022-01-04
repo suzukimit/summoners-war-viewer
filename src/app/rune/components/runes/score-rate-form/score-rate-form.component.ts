@@ -34,6 +34,7 @@ export class ScoreRateFormComponent extends AbstractComponent {
             cliDmg: [globalScoreRate.cliDmg, [Validators.required]],
             resist: [globalScoreRate.resist, [Validators.required]],
             accuracy: [globalScoreRate.accuracy, [Validators.required]],
+            type: '',
         });
     }
 
@@ -51,4 +52,56 @@ export class ScoreRateFormComponent extends AbstractComponent {
         globalScoreRate.accuracy = this.formGroup.controls.accuracy.value;
         this.onUpdate.emit();
     }
+
+    onScoreRateTypeChange(value) {
+        const type = this.scoreRateTypeOptions.find(option => option.value == value);
+        console.log(this.scoreRateTypeOptions);
+        console.log(type);
+        this.formGroup.patchValue({
+            hp: type.hp,
+            hpFlat: type.hpFlat,
+            atk: type.atk,
+            atkFlat: type.atkFlat,
+            def: type.def,
+            defFlat: type.defFlat,
+            spd: type.spd,
+            cliRate: type.cliRate,
+            cliDmg: type.cliDmg,
+            resist: type.resist,
+            accuracy: type.accuracy,
+        });
+    }
+
+    scoreRateTypeOptions = [
+        {
+            value: 'default',
+            label: 'デフォルト',
+            hp: 1,
+            hpFlat: 0.01,
+            atk: 1,
+            atkFlat: 0.2,
+            def: 1,
+            defFlat: 0.2,
+            spd: 2,
+            cliRate: 1.5,
+            cliDmg: 1.2,
+            resist: 1,
+            accuracy: 1,
+        },
+        {
+            value: 'cri-raid',
+            label: 'クリダメアタッカー（異界レイド）',
+            hp: 0.5,
+            hpFlat: 0.005,
+            atk: 1,
+            atkFlat: 0.2,
+            def: 0.5,
+            defFlat: 0.1,
+            spd: 1,
+            cliRate: 1.2,
+            cliDmg: 1.5,
+            resist: 0,
+            accuracy: 0,
+        },
+    ];
 }
