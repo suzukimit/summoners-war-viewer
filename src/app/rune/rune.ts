@@ -239,16 +239,19 @@ export class Rune {
 
 export class ScoreRate {
     hp: number = 1;
-    hpFlat: number = 0.01;
+    get hpFlat(): number { return new BigNumber(this.hp * 100).dividedBy(this._baseHp).dp(5, 1).toNumber(); }
     atk: number = 1;
-    atkFlat: number = 0.2;
+    get atkFlat(): number { return new BigNumber(this.atk * 100).dividedBy(this._baseAtk).dp(2, 1).toNumber(); }
     def: number = 1;
-    defFlat: number = 0.2;
+    get defFlat(): number { return new BigNumber(this.def * 100).dividedBy(this._baseDef).dp(2, 1).toNumber(); }
     spd: number = 2;
     cliRate: number = 1.5;
     cliDmg: number = 1.2;
     resist: number = 1;
     accuracy: number = 1;
+    private _baseHp: number = 10000;
+    private _baseAtk: number = 500;
+    private _baseDef: number = 500;
     fromType(type: number) {
         switch (type) {
             case 1: return this.hpFlat;
@@ -267,16 +270,18 @@ export class ScoreRate {
     }
     copyFrom(scoreRate: ScoreRate) {
         this.hp = scoreRate.hp;
-        this.hpFlat = scoreRate.hpFlat;
         this.atk = scoreRate.atk;
-        this.atkFlat = scoreRate.atkFlat;
         this.def = scoreRate.def;
-        this.defFlat = scoreRate.defFlat;
         this.spd = scoreRate.spd;
         this.cliRate = scoreRate.cliRate;
         this.cliDmg = scoreRate.cliDmg;
         this.resist = scoreRate.resist;
         this.accuracy = scoreRate.accuracy;
+    }
+    setBaseStatus(unit: Unit) {
+        this._baseHp = unit.hp;
+        this._baseAtk = unit.atk;
+        this._baseDef = unit.def;
     }
     init() {
         this.copyFrom(new ScoreRate());

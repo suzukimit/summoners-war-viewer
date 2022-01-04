@@ -104,10 +104,16 @@ export class UnitComponent extends AbstractComponent {
                 if (localStorage.getItem(this.unit.id)) {
                     globalScoreRate.copyFrom(Object.assign(new ScoreRate(), JSON.parse(localStorage.getItem(this.unit.id))));
                 }
+                globalScoreRate.setBaseStatus(this.unit);
                 this.runes = runes;
                 this.streamRecommendedRunes();
             }),
         );
+    }
+
+    ngOnDestroy(): void {
+        super.ngOnDestroy();
+        globalScoreRate.init();
     }
 
     onUpdateScoreRate() {
