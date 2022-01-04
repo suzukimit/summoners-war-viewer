@@ -7,6 +7,7 @@ import { Unit } from 'src/app/unit/unit';
 import { combineLatest } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import * as _ from 'lodash';
+import {unitConfigPresets} from './preset.component';
 
 @Component({
     selector: 'app-unit',
@@ -93,6 +94,8 @@ export class UnitComponent extends AbstractComponent {
         )
         .concat(runeFilterFields({includeFields: ['canBeEquipped']}));
 
+    unitConfigs = unitConfigPresets;
+
     ngOnInit(): void {
         globalScoreRate.init();
         this.subscriptions.push(
@@ -142,5 +145,10 @@ export class UnitComponent extends AbstractComponent {
             this.unitBuilding.runes.push(e.row);
             this.unitBuilding.runes.sort((a, b) => { return a.slot_no - b.slot_no });
         }
+    }
+
+    onUnitConfigChange(value) {
+        const config = this.unitConfigs.find(option => option.key == value);
+        this.subjectManager.unitConfig.next(config);
     }
 }

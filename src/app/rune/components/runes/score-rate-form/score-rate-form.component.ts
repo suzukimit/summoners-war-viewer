@@ -2,6 +2,7 @@ import { Component, EventEmitter, Output } from '@angular/core';
 import { AbstractComponent } from 'src/app/common/components/base/abstract.component';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { globalScoreRate } from 'src/app/rune/rune';
+import {SubjectManager} from '../../../../common/services/sabject-manager/subject.manager';
 
 @Component({
     selector: 'app-score-rate-form',
@@ -10,7 +11,7 @@ import { globalScoreRate } from 'src/app/rune/rune';
 })
 export class ScoreRateFormComponent extends AbstractComponent {
 
-    constructor(protected fb: FormBuilder) {
+    constructor(protected fb: FormBuilder, private subjectManager: SubjectManager) {
         super();
     }
 
@@ -19,6 +20,9 @@ export class ScoreRateFormComponent extends AbstractComponent {
 
     ngOnInit() {
         this.initForm();
+        this.subscriptions.push(
+            this.subjectManager.unitConfig.subscribe(this.onUnitConfigChange.bind(this)),
+        );
     }
 
     initForm() {
@@ -47,46 +51,18 @@ export class ScoreRateFormComponent extends AbstractComponent {
         this.onUpdate.emit();
     }
 
-    onScoreRateTypeChange(value) {
-        const type = this.scoreRateTypeOptions.find(option => option.value == value);
-        console.log(this.scoreRateTypeOptions);
-        console.log(type);
-        this.formGroup.patchValue({
-            hp: type.hp,
-            atk: type.atk,
-            def: type.def,
-            spd: type.spd,
-            cliRate: type.cliRate,
-            cliDmg: type.cliDmg,
-            resist: type.resist,
-            accuracy: type.accuracy,
-        });
+    onUnitConfigChange(config: any) {
+        if (config) {
+            this.formGroup.patchValue({
+                hp: config.hp,
+                atk: config.atk,
+                def: config.def,
+                spd: config.spd,
+                cliRate: config.cliRate,
+                cliDmg: config.cliDmg,
+                resist: config.resist,
+                accuracy: config.accuracy,
+            });
+        }
     }
-
-    scoreRateTypeOptions = [
-        {
-            value: 'default',
-            label: 'デフォルト',
-            hp: 1,
-            atk: 1,
-            def: 1,
-            spd: 2,
-            cliRate: 1.5,
-            cliDmg: 1.2,
-            resist: 1,
-            accuracy: 1,
-        },
-        {
-            value: 'cri-raid',
-            label: 'クリダメアタッカー（異界レイド）',
-            hp: 0.5,
-            atk: 1,
-            def: 0.5,
-            spd: 1,
-            cliRate: 1.2,
-            cliDmg: 1.5,
-            resist: 0,
-            accuracy: 0,
-        },
-    ];
 }

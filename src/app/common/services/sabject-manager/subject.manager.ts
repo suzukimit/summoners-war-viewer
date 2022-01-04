@@ -18,6 +18,7 @@ export class SubjectManager {
     unitRecommendedRunes6: BehaviorSubject<Rune[]>;
     runeCondition: BehaviorSubject<any>;
     importFileName: BehaviorSubject<string>;
+    unitConfig: BehaviorSubject<any>;
 
     constructor() {
         this.reset();
@@ -35,6 +36,7 @@ export class SubjectManager {
         this.unitRecommendedRunes6 = new BehaviorSubject<Rune[]>(null);
         this.runeCondition = new BehaviorSubject<any>(null);
         this.importFileName = new BehaviorSubject<string>(null);
+        this.unitConfig = new BehaviorSubject<any>(null);
     }
 
     getRecommendedRunes(slotNo: number) {

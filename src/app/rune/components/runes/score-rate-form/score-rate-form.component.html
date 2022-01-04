@@ -1,11 +1,4 @@
 <form [formGroup]="formGroup" (ngSubmit)="onUpdateScoreRate()" class="scoreRateForm">
-    <mat-form-field appearance=fill class="type">
-        <mat-select (valueChange)="onScoreRateTypeChange($event)" formControlName="type">
-            <mat-option *ngFor="let option of scoreRateTypeOptions" [value]="option.value">
-                {{option.label}}
-            </mat-option>
-        </mat-select>
-    </mat-form-field>
     <mat-form-field class="status">
         <input matInput type="number" placeholder="hp%" formControlName="hp">
     </mat-form-field>
