@@ -85,7 +85,8 @@ export class Unit {
     }
 
     get name(): string {
-        const name = monster_names[this.unit_master_id] ? monster_names[this.unit_master_id].en : '';
+        const _name = monster_names[this.unit_master_id];
+        const name = _name ? (_name.ja ? _name.ja : _name.en) : '';
         if (name) {
             return name;
         } else {
@@ -95,7 +96,7 @@ export class Unit {
                 return familyName;
             }
         }
-        return '';
+        return this.unit_master_id.toString();
     }
 }
 
