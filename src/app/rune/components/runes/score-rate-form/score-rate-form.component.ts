@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { AbstractComponent } from 'src/app/common/components/base/abstract.component';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { globalScoreRate } from 'src/app/rune/rune';
+import {globalScoreRate, Rune} from 'src/app/rune/rune';
 import {SubjectManager} from '../../../../common/services/sabject-manager/subject.manager';
 
 @Component({
@@ -18,10 +18,13 @@ export class ScoreRateFormComponent extends AbstractComponent {
     formGroup: FormGroup = null;
     @Output() onUpdate = new EventEmitter;
 
+    runes: Rune[] = [];
+
     ngOnInit() {
         this.initForm();
         this.subscriptions.push(
             this.subjectManager.unitConfig.subscribe(this.onUnitConfigChange.bind(this)),
+            this.subjectManager.runes.subscribe(runes => this.runes = runes),
         );
     }
 
@@ -48,6 +51,7 @@ export class ScoreRateFormComponent extends AbstractComponent {
         globalScoreRate.cliDmg = this.formGroup.controls.cliDmg.value;
         globalScoreRate.resist = this.formGroup.controls.resist.value;
         globalScoreRate.accuracy = this.formGroup.controls.accuracy.value;
+        this.runes.forEach(rune => rune.init());
         this.onUpdate.emit();
     }
 

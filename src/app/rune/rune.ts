@@ -61,6 +61,9 @@ export class Rune {
         this.sub2Option = new Option(this.sec_eff[1]);
         this.sub3Option = new Option(this.sec_eff[2]);
         this.sub4Option = new Option(this.sec_eff[3]);
+        this.subOptionsByEnhance = [];
+        this.subOptionsByEnhanceAndTrain = [];
+        this.subOptionsByEnhanceAndTrainAndGem = [];
         this.subOptions.forEach(option => {
             this.subOptionsByEnhance.push(new Option(null, option));
             this.subOptionsByEnhanceAndTrain.push(new Option(null, option));
