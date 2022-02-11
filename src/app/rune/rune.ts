@@ -179,11 +179,9 @@ export class Rune {
         }
 
         if (isUseGem) {
-            let targetOption = subOptions.find(option => option.isGemed);
-            if (!targetOption) {
-                targetOption = [...subOptions].sort((a, b) => a.score - b.score)[0];
-            }
+            const isGemed = subOptions.some(option => option.isGemed);
 
+            //1. 最もスコアが高いオプションで最もスコアが低いオプションを塗り替える戦略
             const highScoreOption = Object.entries(runeEffectType)
                 .filter(entry => this.slot_no !== 1 || ![5, 6].includes(Number(entry[0])))
                 .filter(entry => this.slot_no !== 3 || ![3, 4].includes(Number(entry[0])))
@@ -195,12 +193,41 @@ export class Rune {
                     trainedValue: type[1].trainLegend,
                 }))
                 .sort((a, b) => b.score - a.score)[0];
+            const targetOption = isGemed ? subOptions.find(option => option.isGemed)
+                : [...subOptions].sort((a, b) => a.score - b.score)[0];
+            const diffScore =  highScoreOption.score - targetOption.score;
 
-            if (targetOption && highScoreOption && (targetOption.score < highScoreOption.score)) {
-                targetOption.type = highScoreOption.type;
-                targetOption.value = highScoreOption.value;
-                targetOption.isGemed = true;
-                targetOption.trainedValue = highScoreOption.trainedValue;
+            //2. 同じタイプでより高いオプション値に塗り替える戦略
+            const sameHighScoreOption = subOptions.filter(option => option.isGemed || !isGemed)
+                .map(option => {
+                    let type = entryFromKey(runeEffectType, option.type.toString());
+                    const o = new Option(null, {
+                        type: option.type,
+                        value: type.value.gemLegend - option.value,
+                        isGemed: true,
+                        trainedValue: 0,
+                    });
+                    return o;
+                })
+                .sort((a, b) => b.score - a.score)[0];
+            sameHighScoreOption.value = entryFromKey(runeEffectType, sameHighScoreOption.type.toString()).value.gemLegend;
+            sameHighScoreOption.trainedValue = entryFromKey(runeEffectType, sameHighScoreOption.type.toString()).value.trainLegend;
+            const targetOption2 = isGemed ? subOptions.find(option => option.isGemed)
+                : subOptions.find(o => o.type == sameHighScoreOption.type);
+            const diffScore2 = sameHighScoreOption.score - targetOption2.score;
+
+            //1,2の戦略でよりスコアが高くなる方を採用
+            if (highScoreOption && sameHighScoreOption) {
+                if (diffScore > diffScore2 && diffScore > 0) {
+                    targetOption.type = highScoreOption.type;
+                    targetOption.value = highScoreOption.value;
+                    targetOption.isGemed = true;
+                    targetOption.trainedValue = highScoreOption.trainedValue;
+                } else if (diffScore2 > diffScore && diffScore2 > 0) {
+                    targetOption2.value = sameHighScoreOption.value;
+                    targetOption2.isGemed = true;
+                    targetOption2.trainedValue = sameHighScoreOption.trainedValue;
+                }
             }
         }
     }
