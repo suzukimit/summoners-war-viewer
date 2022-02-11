@@ -3,6 +3,7 @@
  */
 import { Unit } from 'src/app/unit/unit';
 import BigNumber from 'bignumber.js';
+import {entry, entryFromKey} from '../common/util';
 
 export class Option {
     type: number = 0;
@@ -379,6 +380,17 @@ export const runeSet = {
     }
 };
 
+export const extraRuneSet = {
+    101: {
+        label: '2セットルーン',
+        setNumber: 2,
+    },
+    102: {
+        label: '4セットルーン',
+        setNumber: 4,
+    }
+};
+
 export const runeSetEn = {
     1: 'Energy',
     2: 'Guard',
@@ -402,6 +414,10 @@ export const runeSetEn = {
     22: 'Accuracy',
     23: 'Tolerance'
 };
+
+export function runeSetEntryFromLabel(label: string) {
+    return entry(runeSet).concat(entry(extraRuneSet)).find(e => e.value.label === label);
+}
 
 export const runeEffectType = {
     0: {
@@ -537,6 +553,10 @@ export const runeEffectType = {
         trainAncient: 0,
     },
 };
+
+export function runeEffectTypeEntryFromLabel(label: string) {
+    return entry(runeEffectType).find(e => e.value.label === label);
+}
 
 export const extra = {
     1: 'ノーマル',
@@ -688,15 +708,12 @@ export const runeFilterAllFields = [
         label: 'セット',
         key: 'set_id',
         type: 'select',
-        options: Object.entries(runeSet).map(e => ({ value: Number(e[0]), viewValue: e[1].label })).concat([
-            { value: -1, viewValue: '2セットルーン' },
-            { value: -2, viewValue: '4セットルーン' },
-        ]),
+        options: entry(runeSet).concat(entry(extraRuneSet)).map(e => ({ value: Number(e.key), viewValue: e.value.label })),
         customFunction: (data: Rune, value: number[]): boolean => {
-            if (value.includes(-1)) {
+            if (value.includes(101)) {
                 value.push(1, 2, 4, 6, 7, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23);
             }
-            if (value.includes(-2)) {
+            if (value.includes(102)) {
                 value.push(3, 5, 8, 10, 11, 13);
             }
             return value.length === 0 || value.includes(data.set_id);

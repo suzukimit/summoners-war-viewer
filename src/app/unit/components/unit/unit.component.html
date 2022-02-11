@@ -61,26 +61,28 @@
             <mat-card-title>おすすめのルーン</mat-card-title>
         </mat-card-header>
         <mat-card-content>
-            <ng-container *ngFor="let field of recommendedRuneFilterFields">
-                <ng-container [ngSwitch]="field.type">
-                    <ng-container *ngSwitchCase="'select'">
-                        <mat-form-field>
-                            <mat-label>{{field.label}}</mat-label>
-                            <mat-select (valueChange)="onConditionChange(field, $event)" [multiple]=true>
-                                <mat-option *ngFor="let option of field.options" [value]="option.value">
-                                    {{option.viewValue}}
-                                </mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                    </ng-container>
-                    <ng-container *ngSwitchCase="'toggle'">
-                        <mat-slide-toggle (change)="onConditionChange(field, $event.checked)">{{field.label}}</mat-slide-toggle>
-                    </ng-container>
-                    <ng-container *ngSwitchCase="'text'">
-                        <mat-slide-toggle (change)="onConditionChange(field, $event.checked)">{{field.label}}</mat-slide-toggle>
+            <form [formGroup]="formGroup" class="recommendedRuneForm">
+                <ng-container *ngFor="let field of recommendedRuneFilterFields">
+                    <ng-container [ngSwitch]="field.type">
+                        <ng-container *ngSwitchCase="'select'">
+                            <mat-form-field>
+                                <mat-label>{{field.label}}</mat-label>
+                                <mat-select (ngModelChange)="onConditionChange(field, $event)" [multiple]=true [formControlName]=field.key>
+                                    <mat-option *ngFor="let option of field.options" [value]="option.value">
+                                        {{option.viewValue}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </ng-container>
+                        <ng-container *ngSwitchCase="'toggle'">
+                            <mat-slide-toggle (change)="onConditionChange(field, $event.checked)">{{field.label}}</mat-slide-toggle>
+                        </ng-container>
+                        <ng-container *ngSwitchCase="'text'">
+                            <mat-slide-toggle (change)="onConditionChange(field, $event.checked)">{{field.label}}</mat-slide-toggle>
+                        </ng-container>
                     </ng-container>
                 </ng-container>
-            </ng-container>
+            </form>
             <mat-tab-group mat-align-tabs="start" animationDuration="0ms">
                 <ng-container *ngFor="let slot of [1, 2, 3, 4, 5, 6]">
                     <mat-tab [label]="'スロット' + slot"><ng-container *ngTemplateOutlet="runeTable; context:{$implicit:slot}"></ng-container></mat-tab>

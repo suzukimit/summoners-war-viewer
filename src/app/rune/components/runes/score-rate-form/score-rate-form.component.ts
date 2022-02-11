@@ -67,6 +67,7 @@ export class ScoreRateFormComponent extends AbstractComponent {
                 resist: config.resist,
                 accuracy: config.accuracy,
             });
+            this.onUpdateScoreRate();
         }
     }
 }
