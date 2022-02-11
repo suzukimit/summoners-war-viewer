@@ -5,6 +5,7 @@ import { AbstractComponent } from 'src/app/common/components/base/abstract.compo
 import { BehaviorSubject } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { SubjectManager } from 'src/app/common/services/sabject-manager/subject.manager';
+import {MatSortable} from '@angular/material/sort';
 
 @Component({
     selector: 'app-table',
@@ -23,6 +24,8 @@ export class TableComponent<T=any> extends AbstractComponent implements OnInit {
     filterValues = {};
     @Input() tableUpdateKey: string = '';
     @Input() columnFields: { label: string, key: string, toolTipKey: string, sortable:boolean, valueAccessor: any } [] = [];
+    @Input() defaultSortLabel: string = '';
+    @Input() defaultSortOrder: 'asc' | 'desc' = 'asc';
     displayedColumns: string[] = [];
     @Input() filterFields: {
         label: string,
@@ -66,6 +69,9 @@ export class TableComponent<T=any> extends AbstractComponent implements OnInit {
         this.dataSource = new MatTableDataSource(this.data);
         this.dataSource.filterPredicate = this.createFilter();
         this.dataSource.paginator = this.paginator;
+        if (this.defaultSortLabel) {
+            this.sort.sort({id: this.defaultSortLabel, start: this.defaultSortOrder} as MatSortable);
+        }
         this.dataSource.sort = this.sort;
     }
 
