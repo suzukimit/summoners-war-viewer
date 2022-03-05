@@ -1,0 +1,11 @@
+<div *ngIf=rune>
+    <div class="rune-name">
+        <h1>{{rune.title}}</h1>
+    </div>
+
+    <app-table
+        [data]="[rune]"
+        [columnFields]=runeFields
+        [canCustomizeColumnsToShow]=false
+    ></app-table>
+</div>

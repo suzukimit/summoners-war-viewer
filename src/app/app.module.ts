@@ -28,6 +28,7 @@ import { UnitComponent } from 'src/app/unit/components/unit/unit.component';
 import { ArtifactsComponent } from 'src/app/artifacts/components/artifacts/artifacts.component';
 import { HomeComponent } from './home/home.component';
 import { ImportComponent } from './common/components/import/import.component';
+import { RuneComponent } from './rune/components/rune/rune.component';
 
 @NgModule({
     declarations: [
@@ -41,6 +42,7 @@ import { ImportComponent } from './common/components/import/import.component';
         ArtifactsComponent,
         HomeComponent,
         ImportComponent,
+        RuneComponent,
     ],
     imports: [
         BrowserModule,

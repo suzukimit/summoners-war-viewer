@@ -19,6 +19,8 @@ export class RunesComponent extends AbstractComponent {
     filterFields = runeFilterFields({});
     isImportCompleted = false;
 
+    rowRouterLink = (rune: Rune) => `/runes/${rune.id}`;
+
     ngOnInit(): void {
         this.subscriptions.push(
             this.subjectManager.runes.pipe(filter(runes => runes !== null)).subscribe(runes => {

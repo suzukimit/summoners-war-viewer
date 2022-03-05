@@ -53,6 +53,11 @@ export class Rune {
     occupied_id: number; // ?
     occupied_type: number; // ?
 
+    get id() { return this.rune_id.toString() }
+    get title() {
+        return `+${this.upgrade_curr} ${runeSet[this.set_id].label}のルーン(${this.slot_no})`;
+    }
+
     unit: Unit;
 
     init() {
