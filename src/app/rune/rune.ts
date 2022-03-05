@@ -600,10 +600,19 @@ export const extra = {
 
 export const runeColumnAllFields = [
     {
+        label: 'ルーンID',
+        key: 'rune_id',
+        toolTipKey: '',
+        sortable: false,
+        showDefault: false,
+        valueAccessor: (rune: Rune) => rune.rune_id,
+    },
+    {
         label: 'セット',
         key: 'setView',
         toolTipKey: '',
         sortable: false,
+        showDefault: true,
         valueAccessor: (rune: Rune) => runeSet[rune.set_id].label,
     },
     {
@@ -611,6 +620,7 @@ export const runeColumnAllFields = [
         key: 'slot_no',
         toolTipKey: '',
         sortable: false,
+        showDefault: true,
         valueAccessor: null,
     },
     {
@@ -618,6 +628,7 @@ export const runeColumnAllFields = [
         key: 'mainView',
         toolTipKey: '',
         sortable: false,
+        showDefault: true,
         valueAccessor: (rune: Rune) => rune.mainOption.runeView,
     },
     {
@@ -625,6 +636,7 @@ export const runeColumnAllFields = [
         key: 'prefixView',
         toolTipKey: '',
         sortable: false,
+        showDefault: true,
         valueAccessor: (rune: Rune) => rune.prefixOption.runeView,
     },
     {
@@ -632,6 +644,7 @@ export const runeColumnAllFields = [
         key: 'sub1View',
         toolTipKey: '',
         sortable: false,
+        showDefault: true,
         valueAccessor: (rune: Rune) => rune.sub1Option.runeView,
     },
     {
@@ -639,6 +652,7 @@ export const runeColumnAllFields = [
         key: 'sub2View',
         toolTipKey: '',
         sortable: false,
+        showDefault: true,
         valueAccessor: (rune: Rune) => rune.sub2Option.runeView,
     },
     {
@@ -646,6 +660,7 @@ export const runeColumnAllFields = [
         key: 'sub3View',
         toolTipKey: '',
         sortable: false,
+        showDefault: true,
         valueAccessor: (rune: Rune) => rune.sub3Option.runeView,
     },
     {
@@ -653,6 +668,7 @@ export const runeColumnAllFields = [
         key: 'sub4View',
         toolTipKey: '',
         sortable: false,
+        showDefault: true,
         valueAccessor: (rune: Rune) => rune.sub4Option.runeView,
     },
     {
@@ -660,6 +676,7 @@ export const runeColumnAllFields = [
         key: 'class',
         toolTipKey: '',
         sortable: false,
+        showDefault: true,
         valueAccessor: (rune: Rune) => {
             let ret = '';
             for (let i = 0; i < (rune.class % 10); i++) {
@@ -673,6 +690,7 @@ export const runeColumnAllFields = [
         key: 'upgrade_curr',
         toolTipKey: '',
         sortable: false,
+        showDefault: true,
         valueAccessor: null,
     },
     {
@@ -680,6 +698,7 @@ export const runeColumnAllFields = [
         key: 'extraView',
         toolTipKey: '',
         sortable: false,
+        showDefault: true,
         valueAccessor: (rune: Rune) => extra[rune.extra],
     },
     {
@@ -687,6 +706,7 @@ export const runeColumnAllFields = [
         key: 'score',
         toolTipKey: 'scoreToolTip',
         sortable: true,
+        showDefault: true,
         valueAccessor: null,
     },
     {
@@ -694,6 +714,7 @@ export const runeColumnAllFields = [
         key: 'potentialScore1',
         toolTipKey: 'potentialScoreToolTip1',
         sortable: true,
+        showDefault: true,
         valueAccessor: null,
     },
     {
@@ -701,6 +722,7 @@ export const runeColumnAllFields = [
         key: 'potentialScore2',
         toolTipKey: 'potentialScoreToolTip2',
         sortable: true,
+        showDefault: true,
         valueAccessor: null,
     },
     {
@@ -708,6 +730,7 @@ export const runeColumnAllFields = [
         key: 'potentialScore3',
         toolTipKey: 'potentialScoreToolTip3',
         sortable: true,
+        showDefault: true,
         valueAccessor: null,
     },
     {
@@ -715,15 +738,17 @@ export const runeColumnAllFields = [
         key: 'unitName',
         toolTipKey: '',
         sortable: false,
+        showDefault: true,
         valueAccessor: (rune: Rune) => rune.unit ? rune.unit.name : '',
     },
-    // {
-    //     label: 'デバッグ',
-    //     key: 'debag',
-    //     toolTipKey: '',
-    //     sortable: false,
-    //     valueAccessor: (rune: Rune) => rune.sec_eff,
-    // }
+    {
+        label: 'デバッグ用（sec_eff）',
+        key: 'debug',
+        toolTipKey: '',
+        sortable: false,
+        showDefault: false,
+        valueAccessor: (rune: Rune) => rune.sec_eff,
+    }
 ];
 
 export function runeColumnFields(excludeFields: string[] = []) {

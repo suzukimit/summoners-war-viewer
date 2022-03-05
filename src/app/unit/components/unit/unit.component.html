@@ -11,6 +11,7 @@
                 <app-table
                     [data]="[data]"
                     [columnFields]=unitFields
+                    [canCustomizeColumnsToShow]=false
                 ></app-table>
                 <span class="mat-body">発動中のルーン: {{data.applicableRunes.toString()}}</span>
             </mat-card-content>

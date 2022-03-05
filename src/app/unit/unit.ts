@@ -3686,58 +3686,70 @@ export const unitColumnAllFields = [
     {
         label: '名前',
         key: 'name',
+        showDefault: true,
     },
     {
         label: '属性',
         key: 'attributeName',
+        showDefault: true,
     },
     {
         label: 'クラス',
         key: 'class',
+        showDefault: true,
     },
     {
         label: 'レベル',
         key: 'unit_level',
+        showDefault: true,
     },
     {
         label: '発動ルーン',
         key: 'runeSet',
+        showDefault: true,
         valueAccessor: (unit: Unit) => unit.applicableRunes,
     },
     {
         label: 'ルーン1',
         key: 'rune1',
+        showDefault: true,
         valueAccessor: (unit: Unit) => unit.runes[0] ? unit.runes[0].unitScoreView : '',
     },
     {
         label: 'ルーン2',
         key: 'rune2',
+        showDefault: true,
         valueAccessor: (unit: Unit) => unit.runes[1] ? unit.runes[1].unitScoreView : '',
     },
     {
         label: 'ルーン3',
         key: 'rune3',
+        showDefault: true,
         valueAccessor: (unit: Unit) => unit.runes[2] ? unit.runes[2].unitScoreView : '',
     },
     {
         label: 'ルーン4',
         key: 'rune4',
+        showDefault: true,
         valueAccessor: (unit: Unit) => unit.runes[3] ? unit.runes[3].unitScoreView : '',
     },
     {
         label: 'ルーン5',
         key: 'rune5',
+        showDefault: true,
         valueAccessor: (unit: Unit) => unit.runes[4] ? unit.runes[4].unitScoreView : '',
     },
     {
         label: 'ルーン6',
         key: 'rune6',
+        showDefault: true,
         valueAccessor: (unit: Unit) => unit.runes[5] ? unit.runes[5].unitScoreView : '',
     },
     {
         label: 'スコア合計',
         key: 'runesScoreSum',
         sortable: true,
+        showDefault: true,
         valueAccessor: (unit: Unit) => unit.runesScoreSum,
     },
 ];

@@ -23,10 +23,16 @@ export class TableComponent<T=any> extends AbstractComponent implements OnInit {
     dataSource: MatTableDataSource<T> = null;
     filterValues = {};
     @Input() tableUpdateKey: string = '';
-    @Input() columnFields: { label: string, key: string, toolTipKey: string, sortable:boolean, valueAccessor: any } [] = [];
+    @Input() columnFields: {
+        label: string,
+        key: string,
+        toolTipKey: string,
+        sortable:boolean,
+        valueAccessor: any,
+        showDefault: boolean
+    } [] = [];
     @Input() defaultSortLabel: string = '';
     @Input() defaultSortOrder: 'asc' | 'desc' = 'asc';
-    displayedColumns: string[] = [];
     @Input() filterFields: {
         label: string,
         key: string,
@@ -46,8 +52,17 @@ export class TableComponent<T=any> extends AbstractComponent implements OnInit {
     //外側から条件を指定する場合
     @Input() conditionValueSubject: BehaviorSubject<T[]> = null;
 
+    //表示列の切り替え
+    displayedColumns: string[] = [];
+    columnsToDisplay: any[] = [];
+    private get _displayedColumns() {
+        return this.columnFields.filter(f => !this.canCustomizeColumnsToShow || f.showDefault).map(f => f.key);
+    }
+    @Input() canCustomizeColumnsToShow: boolean = true;
+
     ngOnInit(): void {
-        this.displayedColumns = this.columnFields.map(f => f.key);
+        this.displayedColumns = this._displayedColumns;
+        this.columnsToDisplay = this.columnFields;
         this.initDataSource();
         if (this.dataSourceSubject) {
             this.subscriptions.push(
@@ -103,6 +118,16 @@ export class TableComponent<T=any> extends AbstractComponent implements OnInit {
     onConditionChange(condition, value) {
         this.filterValues[condition.key] = value;
         this.dataSource.filter = JSON.stringify(this.filterValues);
+    }
+
+    onColumnToShowChange(value: string[]) {
+        this.columnsToDisplay.forEach(column => {
+            column.showDefault = value.includes(column.key);
+        });
+        this.displayedColumns = this._displayedColumns;
+    }
+    get columnsToShowValue() {
+        return this.columnsToDisplay.filter(c => c.showDefault).map(c => c.key);
     }
 
     resetFilters() {
