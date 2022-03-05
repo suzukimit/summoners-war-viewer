@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { Rune, ScoreRate } from 'src/app/rune/rune';
 import { Unit } from 'src/app/unit/unit';
+import {UnitBuild} from '../../../unit-build/unit-build';
 
 @Injectable({
     providedIn: 'root',
@@ -18,7 +19,7 @@ export class SubjectManager {
     unitRecommendedRunes6: BehaviorSubject<Rune[]>;
     runeCondition: BehaviorSubject<any>;
     importFileName: BehaviorSubject<string>;
-    unitConfig: BehaviorSubject<any>;
+    unitBuild: BehaviorSubject<UnitBuild>;
 
     constructor() {
         this.reset();
@@ -36,7 +37,7 @@ export class SubjectManager {
         this.unitRecommendedRunes6 = new BehaviorSubject<Rune[]>(null);
         this.runeCondition = new BehaviorSubject<any>(null);
         this.importFileName = new BehaviorSubject<string>(null);
-        this.unitConfig = new BehaviorSubject<any>(null);
+        this.unitBuild = new BehaviorSubject<UnitBuild>(null);
     }
 
     getRecommendedRunes(slotNo: number) {

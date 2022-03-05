@@ -3,6 +3,7 @@ import { AbstractComponent } from 'src/app/common/components/base/abstract.compo
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {globalScoreRate, Rune} from 'src/app/rune/rune';
 import {SubjectManager} from '../../../../common/services/sabject-manager/subject.manager';
+import {UnitBuild} from '../../../../unit-build/unit-build';
 
 @Component({
     selector: 'app-score-rate-form',
@@ -23,7 +24,7 @@ export class ScoreRateFormComponent extends AbstractComponent {
     ngOnInit() {
         this.initForm();
         this.subscriptions.push(
-            this.subjectManager.unitConfig.subscribe(this.onUnitConfigChange.bind(this)),
+            this.subjectManager.unitBuild.subscribe(this.onUnitBuildChange.bind(this)),
             this.subjectManager.runes.subscribe(runes => this.runes = runes),
         );
     }
@@ -43,29 +44,21 @@ export class ScoreRateFormComponent extends AbstractComponent {
     }
 
     onUpdateScoreRate() {
-        globalScoreRate.hp = this.formGroup.controls.hp.value;
-        globalScoreRate.atk = this.formGroup.controls.atk.value;
-        globalScoreRate.def = this.formGroup.controls.def.value;
-        globalScoreRate.spd = this.formGroup.controls.spd.value;
-        globalScoreRate.cliRate = this.formGroup.controls.cliRate.value;
-        globalScoreRate.cliDmg = this.formGroup.controls.cliDmg.value;
-        globalScoreRate.resist = this.formGroup.controls.resist.value;
-        globalScoreRate.accuracy = this.formGroup.controls.accuracy.value;
         this.runes.forEach(rune => rune.init());
         this.onUpdate.emit();
     }
 
-    onUnitConfigChange(config: any) {
-        if (config) {
+    onUnitBuildChange(build: UnitBuild) {
+        if (build) {
             this.formGroup.patchValue({
-                hp: config.hp,
-                atk: config.atk,
-                def: config.def,
-                spd: config.spd,
-                cliRate: config.cliRate,
-                cliDmg: config.cliDmg,
-                resist: config.resist,
-                accuracy: config.accuracy,
+                hp: build.hp,
+                atk: build.atk,
+                def: build.def,
+                spd: build.spd,
+                cliRate: build.cliRate,
+                cliDmg: build.cliDmg,
+                resist: build.resist,
+                accuracy: build.accuracy,
             });
             this.onUpdateScoreRate();
         }

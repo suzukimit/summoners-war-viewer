@@ -35,14 +35,14 @@
     <ng-container *ngTemplateOutlet="equipment; context:{title:'装備中のルーン', unit: unit}"></ng-container>
     <ng-container *ngTemplateOutlet="equipment; context:{title:'装備中のルーン（変更後）', unit: unitBuilding}"></ng-container>
 
-    <mat-card class="unit-config">
+    <mat-card class="unit-build">
         <mat-card-header>
-            <mat-card-title>保存済みの設定を選択</mat-card-title>
+            <mat-card-title>保存済みのビルドを選択</mat-card-title>
         </mat-card-header>
         <mat-card-content>
-            <mat-select (valueChange)="onUnitConfigChange($event)">
-                <mat-option *ngFor="let config of unitConfigs" [value]="config.key">
-                    {{config.label}}
+            <mat-select (valueChange)="onUnitBuildChange($event)">
+                <mat-option *ngFor="let build of unitBuilds" [value]="build.key">
+                    {{build.label}}
                 </mat-option>
             </mat-select>
         </mat-card-content>

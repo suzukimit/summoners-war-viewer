@@ -15,7 +15,7 @@ import { Unit } from 'src/app/unit/unit';
 import { combineLatest } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import * as _ from 'lodash';
-import {unitConfigPresets} from './preset';
+import {unitBuildPresets} from '../../../unit-build/preset';
 import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
 import {entry} from '../../../common/util';
 
@@ -106,7 +106,7 @@ export class UnitComponent extends AbstractComponent {
         )
         .concat(runeFilterFields({includeFields: ['canBeEquipped']}));
 
-    unitConfigs = unitConfigPresets;
+    unitBuilds = unitBuildPresets;
     recommendedRuneDefaultSort = {};
 
     ngOnInit(): void {
@@ -125,7 +125,7 @@ export class UnitComponent extends AbstractComponent {
                 this.runes = runes;
                 this.streamRecommendedRunes();
             }),
-            this.subjectManager.unitConfig.subscribe(config => {
+            this.subjectManager.unitBuild.subscribe(config => {
                 if (config) {
                     this.formGroup.controls.set_id.setValue(config.setLabels.map(label => Number(runeSetEntryFromLabel(label).key)));
                     this.formGroup.controls.mainType2.setValue(config.mainType2Labels.map(label => Number(runeEffectTypeEntryFromLabel(label).key)));
@@ -178,8 +178,9 @@ export class UnitComponent extends AbstractComponent {
         }
     }
 
-    onUnitConfigChange(value) {
-        const config = this.unitConfigs.find(option => option.key == value);
-        this.subjectManager.unitConfig.next(config);
+    onUnitBuildChange(value) {
+        const build = this.unitBuilds.find(option => option.key == value);
+        build.updateGlobalScoreRate();
+        this.subjectManager.unitBuild.next(build);
     }
 }
