@@ -127,10 +127,10 @@ export class UnitComponent extends AbstractComponent {
             }),
             this.subjectManager.unitBuild.subscribe(config => {
                 if (config) {
-                    this.formGroup.controls.set_id.setValue(config.setLabels.map(label => Number(runeSetEntryFromLabel(label).key)));
-                    this.formGroup.controls.mainType2.setValue(config.mainType2Labels.map(label => Number(runeEffectTypeEntryFromLabel(label).key)));
-                    this.formGroup.controls.mainType4.setValue(config.mainType4Labels.map(label => Number(runeEffectTypeEntryFromLabel(label).key)));
-                    this.formGroup.controls.mainType6.setValue(config.mainType6Labels.map(label => Number(runeEffectTypeEntryFromLabel(label).key)));
+                    this.formGroup.controls.set_id.setValue(config.runeSets);
+                    this.formGroup.controls.mainType2.setValue(config.mainType2Labels);
+                    this.formGroup.controls.mainType4.setValue(config.mainType4Labels);
+                    this.formGroup.controls.mainType6.setValue(config.mainType6Labels);
                 }
             }),
         );

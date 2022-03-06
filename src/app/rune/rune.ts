@@ -41,8 +41,8 @@ export class Option {
 }
 
 export class Rune {
-    set_id: number;
-    slot_no: number;
+    set_id: RuneSetType;
+    slot_no: 1 | 2 | 3 | 4 | 5 | 6;
     pri_eff: number[];  // メインオプション
     prefix_eff: number[];  // 接頭語オプション
     sec_eff: number[][];  // サブオプション [type, value, isGemed, trainedValue]のarray
@@ -325,6 +325,7 @@ export class ScoreRate {
 }
 export const globalScoreRate = new ScoreRate();
 
+export enum RuneSet { 元気 = 1, 守護, 迅速, 刃, 激怒, 集中, 忍耐, 猛攻, 絶望 = 10, 吸血, 暴走 = 13, 果報, 意志, 保護, 反撃, 破壊, 闘志, 決意, 高揚, 命中, 根性 }
 export const runeSet = {
     1: {
         label: '元気',
@@ -411,7 +412,10 @@ export const runeSet = {
         setNumber: 2,
     }
 };
+export const set2Runes: RuneSetType[] = [1, 2, 4, 6, 7, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23];
+export const set4Runes: RuneSetType[] = [3, 5, 8, 10, 11, 13];
 
+//TODO 廃止にしたい
 export const extraRuneSet = {
     101: {
         label: '2セットルーン',
@@ -422,6 +426,7 @@ export const extraRuneSet = {
         setNumber: 4,
     }
 };
+export type RuneSetType = keyof typeof runeSet | keyof typeof extraRuneSet;
 
 export const runeSetEn = {
     1: 'Energy',
@@ -451,6 +456,7 @@ export function runeSetEntryFromLabel(label: string) {
     return entry(runeSet).concat(entry(extraRuneSet)).find(e => e.value.label === label);
 }
 
+export enum RuneEffect { "HP+" = 1, "HP%", "攻撃力+", "攻撃力%", "防御力+", "防御力%", "速度" = 8, "クリ率", "クリダメ", "抵抗", "的中" }
 export const runeEffectType = {
     0: {
         label: '',
@@ -585,6 +591,7 @@ export const runeEffectType = {
         trainAncient: 0,
     },
 };
+export type RuneEffectType = keyof typeof runeEffectType;
 
 export function runeEffectTypeEntryFromLabel(label: string) {
     return entry(runeEffectType).find(e => e.value.label === label);
