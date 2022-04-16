@@ -12,11 +12,11 @@ export class UnitBuild {
     resist: number = 1;
     accuracy: number = 1;
     runeSets: RuneSetType[] = [];
-    mainType2Labels: RuneEffectType[] = [];
-    mainType4Labels: RuneEffectType[] = [];
-    mainType6Labels: RuneEffectType[] = [];
+    mainTypes2: RuneEffectType[] = [];
+    mainTypes4: RuneEffectType[] = [];
+    mainTypes6: RuneEffectType[] = [];
 
-    constructor(init: { key: string, label: string, hp: number, atk: number, def: number, spd: number, cliRate: number, cliDmg: number, resist: number, accuracy: number, setLabels: RuneSetType[], mainType2Labels: RuneEffectType[], mainType4Labels: RuneEffectType[], mainType6Labels: RuneEffectType[] }) {
+    constructor(init: { key: string, label: string, hp: number, atk: number, def: number, spd: number, cliRate: number, cliDmg: number, resist: number, accuracy: number, setLabels: RuneSetType[], mainTypes2: RuneEffectType[], mainTypes4: RuneEffectType[], mainTypes6: RuneEffectType[] }) {
         this.key = init.key;
         this.label = init.label;
         this.hp = init.hp;
@@ -28,9 +28,9 @@ export class UnitBuild {
         this.resist = init.resist;
         this.accuracy = init.accuracy;
         this.runeSets = init.setLabels;
-        this.mainType2Labels = init.mainType2Labels;
-        this.mainType4Labels = init.mainType4Labels;
-        this.mainType6Labels = init.mainType6Labels;
+        this.mainTypes2 = init.mainTypes2;
+        this.mainTypes4 = init.mainTypes4;
+        this.mainTypes6 = init.mainTypes6;
     }
 
     updateGlobalScoreRate() {
@@ -47,13 +47,13 @@ export class UnitBuild {
     match(rune: Rune): boolean {
         switch (rune.slot_no) {
             case 2:
-                if (this.mainType2Labels.length > 0 && !this.mainType2Labels.includes(rune.mainOption.type as RuneEffectType)) return false;
+                if (this.mainTypes2.length > 0 && !this.mainTypes2.includes(rune.mainOption.type as RuneEffectType)) return false;
                 break;
             case 4:
-                if (this.mainType4Labels.length > 0 && !this.mainType4Labels.includes(rune.mainOption.type as RuneEffectType)) return false;
+                if (this.mainTypes4.length > 0 && !this.mainTypes4.includes(rune.mainOption.type as RuneEffectType)) return false;
                 break;
             case 6:
-                if (this.mainType6Labels.length > 0 && !this.mainType6Labels.includes(rune.mainOption.type as RuneEffectType)) return false;
+                if (this.mainTypes6.length > 0 && !this.mainTypes6.includes(rune.mainOption.type as RuneEffectType)) return false;
                 break;
         }
         return this.runeSets.length == 0 || this.runeSets.includes(rune.set_id);

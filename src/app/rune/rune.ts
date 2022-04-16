@@ -4,6 +4,7 @@
 import { Unit } from 'src/app/unit/unit';
 import BigNumber from 'bignumber.js';
 import {entry, entryFromKey} from '../common/util';
+import {UnitBuild} from '../unit-build/unit-build';
 
 export class Option {
     type: number = 0;
@@ -40,6 +41,11 @@ export class Option {
     }
 }
 
+interface RuneScoreRanking {
+    unitBuild: UnitBuild;
+    order: number;
+}
+
 export class Rune {
     set_id: RuneSetType;
     slot_no: 1 | 2 | 3 | 4 | 5 | 6;
@@ -59,6 +65,8 @@ export class Rune {
     }
 
     unit: Unit;
+
+    runeScoreRankedAt: RuneScoreRanking[] = [];
 
     init() {
         this.mainOption = new Option(this.pri_eff);
@@ -148,6 +156,12 @@ export class Rune {
     //ユニット一覧での見せ方
     get unitScoreView() {
         return `${this.score}(${this.potentialScore2}, ${this.potentialScore3})`
+    }
+    get runeScoreRankedAtView() {
+        return this.runeScoreRankedAt.map(e => `${e.unitBuild.label} (${e.order}位)`).join(', ');
+    }
+    get runeScoreRankedAtToolTip() {
+        return this.runeScoreRankedAt.map(e => `${e.unitBuild.label} (${e.order}位)`).join(', ');
     }
 
     scoreToolTipView(subOptions: Option[]) {
@@ -615,7 +629,7 @@ export const runeColumnAllFields = [
         label: 'ルーンID',
         key: 'rune_id',
         toolTipKey: '',
-        sortable: false,
+        sortable: true,
         showDefault: false,
         valueAccessor: (rune: Rune) => rune.rune_id,
     },
@@ -754,6 +768,14 @@ export const runeColumnAllFields = [
         valueAccessor: (rune: Rune) => rune.unit ? rune.unit.name : '',
     },
     {
+        label: 'ランクイン',
+        key: 'rankin',
+        toolTipKey: 'runeScoreRankedAtToolTip',
+        sortable: false,
+        showDefault: true,
+        valueAccessor: (rune: Rune) => rune.runeScoreRankedAtView,
+    },
+    {
         label: 'デバッグ用（sec_eff）',
         key: 'debug',
         toolTipKey: '',
@@ -823,6 +845,12 @@ export const runeFilterAllFields = [
         key: 'enhanceCount',
         type: 'select',
         options: [{value: 4, viewValue: '+12~15'}, {value: 3, viewValue: '+9~11'}, {value: 2, viewValue: '+6~8'}, {value: 1, viewValue: '+3~5'}, {value: 0, viewValue: '+0~2'}],
+    },
+    {
+        label: 'ランク外',
+        key: 'outOfRanking',
+        type: 'toggle',
+        customFunction: (data: Rune, value: any): boolean => data.runeScoreRankedAt.length === 0,
     },
     {
         label: '装備可能のみ',
