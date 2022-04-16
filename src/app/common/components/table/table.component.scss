@@ -2,12 +2,19 @@
 
 table {
     width: 100%;
+    table-layout: fixed;
     tr {
         td a {
             display: block;
             line-height: 48px;
             text-decoration: none;
         }
+    }
+    th, td {
+        overflow: hidden;
+        width: auto;
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
     .highlight {
         background: mat-color($primary, lighter);
